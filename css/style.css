@@ -1,0 +1,1679 @@
+/* ================================================
+   VARIABLES CSS — La paleta de colores de P3R
+   Definidas aquí una sola vez, usadas en todo el proyecto.
+   Para cambiar el color cyan de todo el sitio: solo editas --cyan.
+   ================================================ */
+:root {
+  /* Paleta principal P3R */
+  --bg-dark:        #000d1a;   /* fondo más oscuro */
+  --bg-mid:         #001533;   /* azul noche */
+  --bg-light:       #002966;   /* azul medio */
+  --cyan:           #00ccff;   /* cyan neón — color dominante */
+  --cyan-dim:       #0099cc;   /* cyan apagado para estados inactivos */
+  --red-accent:     #ff2244;   /* rojo — ítem activo del menú */
+  --pink-accent:    #ff66aa;   /* rosa — acento secundario */
+  --white:          #ffffff;
+  --white-dim:      rgba(255, 255, 255, 0.7);
+  --white-ghost:    rgba(255, 255, 255, 0.15);
+
+  /* Fuentes */
+  --font-title:     'Bebas Neue', sans-serif;   /* títulos grandes */
+  --font-body:      'Rajdhani', sans-serif;      /* todo el resto */
+
+  /* Sidebar */
+  --sidebar-width:  280px;
+
+  /* Transiciones */
+  --transition-fast:  0.15s ease;
+  --transition-med:   0.3s ease;
+}
+
+/* ================================================
+   RESET Y BASE
+   Elimina los estilos por defecto del navegador
+   para que el diseño sea consistente en todos lados.
+   ================================================ */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden; /* sin scroll global — cada sección es una "pantalla" */
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--white);
+  background: var(--bg-dark);
+  /* Usamos overflow:hidden porque el portafolio se comporta como un juego:
+     pantalla completa, sin scroll de página */
+}
+
+/* ================================================
+   FONDO — Capas del fondo azul de P3R
+   Dos divs superpuestos: el gradiente base + la cuadrícula
+   ================================================ */
+.bg-layer {
+  position: fixed;
+  inset: 0; /* equivale a top:0; right:0; bottom:0; left:0 */
+  background: linear-gradient(
+    160deg,
+    var(--bg-dark) 0%,
+    var(--bg-mid)  40%,
+    var(--bg-light) 100%
+  );
+  z-index: 0;
+}
+
+/* Cuadrícula sutil de perspectiva — característica visual de P3R */
+.bg-grid {
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0, 204, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 204, 255, 0.04) 1px, transparent 1px);
+  background-size: 50px 50px;
+  z-index: 1;
+  pointer-events: none; /* deja pasar los clics a los elementos de abajo */
+}
+
+/* ================================================
+   LAYOUT PRINCIPAL
+   Dos columnas: sidebar fija a la izquierda + contenido flexible
+   Usamos Flexbox: el método moderno de layouts en CSS.
+   ================================================ */
+.app-layout {
+  position: relative;
+  z-index: 2;
+  display: flex;          /* activa flexbox */
+  height: 100vh;          /* ocupa toda la altura de la ventana */
+  width: 100vw;
+}
+
+/* ================================================
+   SIDEBAR — Menú lateral izquierdo
+   ================================================ */
+.sidebar {
+  width: var(--sidebar-width);
+  min-width: var(--sidebar-width);
+  height: 100vh;
+  display: flex;
+  flex-direction: column; /* apila los elementos verticalmente */
+  padding: 2rem 0 1.5rem;
+  background: rgba(0, 0, 0, 0.5);
+  /* backdrop-filter crea el efecto de "vidrio esmerilado" detrás del sidebar */
+  backdrop-filter: blur(12px);
+  border-right: 1px solid rgba(0, 204, 255, 0.15);
+  position: relative;
+  z-index: 10;
+}
+
+/* Línea diagonal decorativa en el borde del sidebar — sello de P3R */
+.sidebar::after {
+  content: '';
+  position: absolute;
+  right: -1px;
+  top: 0;
+  width: 3px;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    var(--cyan) 30%,
+    var(--red-accent) 60%,
+    transparent 100%
+  );
+}
+
+/* ---- HEADER DEL SIDEBAR: avatar + nombre ---- */
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 1.5rem 1.5rem;
+  border-bottom: 1px solid var(--white-ghost);
+  margin-bottom: 1rem;
+}
+
+.char-avatar {
+  flex-shrink: 0;
+}
+
+/* El avatar circular con iniciales */
+.avatar-placeholder {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--bg-light);
+  border: 2px solid var(--cyan);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-title);
+  font-size: 1.2rem;
+  color: var(--cyan);
+  letter-spacing: 0.05em;
+}
+
+.char-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.char-name {
+  font-family: var(--font-title);
+  font-size: 1.4rem;
+  letter-spacing: 0.1em;
+  color: var(--white);
+  line-height: 1;
+}
+
+.char-role {
+  font-size: 0.75rem;
+  color: var(--cyan-dim);
+  letter-spacing: 0.05em;
+}
+
+/* ---- BARRAS HP / SP ---- */
+.stat-bars {
+  padding: 0 1.5rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-bottom: 1px solid var(--white-ghost);
+  margin-bottom: 0.5rem;
+}
+
+.stat-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.stat-label {
+  font-family: var(--font-title);
+  font-size: 0.85rem;
+  color: #22cc88;        /* verde — HP siempre es verde en P3R */
+  min-width: 24px;
+  letter-spacing: 0.05em;
+}
+
+.stat-label.sp {
+  color: #ffcc22;        /* amarillo — SP siempre es amarillo en P3R */
+}
+
+/* El contenedor de la barra — el "riel" gris de fondo */
+.stat-bar-wrap {
+  flex: 1;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+/* La barra de relleno. --fill viene del HTML como style="--fill: 85%" */
+.stat-bar {
+  height: 100%;
+  width: var(--fill);
+  border-radius: 3px;
+  transition: width 1s ease; /* animación de carga */
+}
+
+.hp-bar { background: #22cc88; }
+.sp-bar { background: #ffcc22; }
+
+.stat-value {
+  font-family: var(--font-title);
+  font-size: 0.9rem;
+  color: #22cc88;
+  min-width: 32px;
+  text-align: right;
+}
+
+.stat-value.sp { color: #ffcc22; }
+
+/* ================================================
+   NAVEGACIÓN PRINCIPAL — El menú inclinado de P3R
+   ================================================ */
+.main-nav {
+  flex: 1; /* ocupa el espacio sobrante entre header y footer */
+  overflow-y: auto;
+  padding: 0.5rem 0;
+}
+
+.nav-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0.6rem 1.5rem;
+  cursor: pointer;
+  position: relative;
+  transition: var(--transition-fast);
+  /* transform: skewX() — aquí está el efecto de inclinación característico de P3R
+     El número negativo inclina a la derecha (italic visual) */
+  /* No aplicamos skew al contenedor para no afectar la legibilidad del texto */
+}
+
+/* La flecha lateral — solo visible en el ítem activo */
+.nav-arrow {
+  width: 0;
+  height: 0;
+  border-top: 7px solid transparent;
+  border-bottom: 7px solid transparent;
+  border-left: 12px solid var(--red-accent);
+  opacity: 0;                           /* invisible por defecto */
+  transition: opacity var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.nav-label {
+  font-family: var(--font-title);
+  letter-spacing: 0.08em;
+  font-size: 1rem;
+  color: var(--cyan-dim);
+  transition: var(--transition-fast);
+  /* transform en el texto — el efecto italic/skew de P3R */
+  display: inline-block;
+  transform: skewX(-6deg);
+}
+
+/* Estado hover — texto se ilumina */
+.nav-item:hover .nav-label {
+  color: var(--cyan);
+}
+
+.nav-item:hover .nav-arrow {
+  opacity: 0.4;
+}
+
+/* Estado activo — ítem seleccionado */
+.nav-item.active .nav-label {
+  font-size: 1.5rem;         /* el ítem activo es más grande — como en P3R */
+  color: var(--white);
+  text-shadow: 0 0 20px var(--cyan);
+}
+
+.nav-item.active .nav-arrow {
+  opacity: 1;
+}
+
+/* Fondo del ítem activo — franja translúcida */
+.nav-item.active::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 34, 68, 0.15) 0%,
+    transparent 100%
+  );
+  border-left: 3px solid var(--red-accent);
+}
+
+/* ---- FOOTER DEL SIDEBAR: hints de controles ---- */
+.sidebar-footer {
+  padding: 1rem 1.5rem 0;
+  border-top: 1px solid var(--white-ghost);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ctrl-hint {
+  font-size: 0.7rem;
+  color: var(--white-dim);
+  letter-spacing: 0.05em;
+}
+
+kbd {
+  background: var(--white-ghost);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+  padding: 1px 5px;
+  font-family: var(--font-body);
+  font-size: 0.65rem;
+}
+
+/* ================================================
+   ÁREA DE CONTENIDO — Columna derecha
+   ================================================ */
+.content-area {
+  flex: 1;       /* ocupa todo el espacio restante después del sidebar */
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+}
+
+/* ================================================
+   SECCIONES — Cada "pantalla" del portafolio
+   ================================================ */
+.section {
+  position: absolute; /* todas ocupan el mismo espacio... */
+  inset: 0;
+  padding: 3rem 3.5rem;
+  overflow-y: auto;
+  /* ...pero solo una es visible a la vez */
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(30px); /* desplazada a la derecha — lista para entrar */
+  transition:
+    opacity var(--transition-med),
+    transform var(--transition-med);
+}
+
+/* La sección activa: visible y en su posición */
+.section.active {
+  opacity: 1;
+  pointer-events: all;
+  transform: translateX(0);
+}
+
+/* ---- HEADER DE SECCIÓN ---- */
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+/* El título grande tipo P3R */
+.section-title {
+  font-family: var(--font-title);
+  font-size: 3.5rem;
+  letter-spacing: 0.12em;
+  color: var(--white);
+  /* El fondo rojo-blanco diagonal detrás del título — sello de P3R */
+  background: linear-gradient(
+    105deg,
+    var(--red-accent) 0%,
+    var(--red-accent) 40%,
+    var(--white) 40%,
+    var(--white) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+}
+
+/* Línea horizontal que acompaña el título */
+.section-line {
+  flex: 1;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    var(--cyan) 0%,
+    transparent 100%
+  );
+}
+
+/* ================================================
+   SECCIÓN: ABOUT
+   ================================================ */
+.about-content {
+  display: flex;
+  gap: 3rem;
+  align-items: flex-start;
+}
+
+.about-avatar-large {
+  flex-shrink: 0;
+}
+
+.avatar-large-placeholder {
+  width: 160px;
+  height: 200px;
+  border-radius: 8px;
+  background: var(--bg-light);
+  border: 2px solid var(--cyan);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-title);
+  font-size: 3rem;
+  color: var(--cyan);
+  /* El efecto de clip diagonal — corte geométrico estilo P3R */
+  clip-path: polygon(0 0, 100% 0, 100% 85%, 90% 100%, 0 100%);
+}
+
+.about-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.about-name {
+  font-family: var(--font-title);
+  font-size: 2.5rem;
+  letter-spacing: 0.1em;
+  line-height: 1;
+}
+
+.about-role {
+  font-size: 1rem;
+  color: var(--cyan);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+.about-institute {
+  font-size: 0.85rem;
+  color: var(--white-dim);
+}
+
+.about-bio {
+  font-size: 0.95rem;
+  color: var(--white-dim);
+  line-height: 1.7;
+  max-width: 500px;
+  margin-top: 0.5rem;
+}
+
+/* Tags — pastillas de tecnologías */
+.about-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 0.5rem;
+}
+
+.tag {
+  font-family: var(--font-title);
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  padding: 4px 12px;
+  border: 1px solid var(--cyan);
+  color: var(--cyan);
+  background: rgba(0, 204, 255, 0.08);
+  clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
+}
+
+.tag.small {
+  font-size: 0.7rem;
+  padding: 2px 8px;
+}
+
+/* ================================================
+   SECCIÓN: PROJECTS
+   ================================================ */
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.5rem;
+}
+
+.project-card {
+  background: rgba(0, 21, 51, 0.8);
+  border: 1px solid rgba(0, 204, 255, 0.2);
+  border-radius: 4px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  cursor: pointer;
+  transition: var(--transition-med);
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%);
+}
+
+.project-card:hover {
+  border-color: var(--cyan);
+  background: rgba(0, 204, 255, 0.05);
+  transform: translateY(-4px);
+}
+
+.project-card.placeholder {
+  opacity: 0.5;
+  cursor: default;
+  border-style: dashed;
+}
+
+.project-lv {
+  font-family: var(--font-title);
+  font-size: 0.8rem;
+  color: var(--cyan-dim);
+  letter-spacing: 0.1em;
+}
+
+.project-name {
+  font-family: var(--font-title);
+  font-size: 1.4rem;
+  color: var(--white);
+  letter-spacing: 0.05em;
+}
+
+.project-desc {
+  font-size: 0.85rem;
+  color: var(--white-dim);
+  line-height: 1.6;
+  flex: 1;
+}
+
+.project-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+/* ================================================
+   SECCIÓN: SKILLS
+   ================================================ */
+.skills-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  max-width: 600px;
+}
+
+.skill-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.skill-name {
+  font-family: var(--font-title);
+  font-size: 1rem;
+  letter-spacing: 0.08em;
+  min-width: 120px;
+  color: var(--white);
+}
+
+.skill-bar-wrap {
+  flex: 1;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Las barras de skill arrancan en 0 y se animan al aparecer la sección */
+.skill-bar {
+  height: 100%;
+  width: 0; /* empieza en 0, JS la animará */
+  background: linear-gradient(90deg, var(--cyan-dim), var(--cyan));
+  border-radius: 4px;
+  transition: width 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.skill-pct {
+  font-family: var(--font-title);
+  font-size: 0.9rem;
+  color: var(--cyan);
+  min-width: 32px;
+  text-align: right;
+}
+
+/* ================================================
+   SECCIÓN: SOCIAL LINK
+   ================================================ */
+.social-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 480px;
+}
+
+.social-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  background: rgba(0, 21, 51, 0.8);
+  border: 1px solid rgba(0, 204, 255, 0.2);
+  border-radius: 4px;
+  text-decoration: none;
+  color: var(--white);
+  transition: var(--transition-med);
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%);
+}
+
+.social-card:hover {
+  border-color: var(--cyan);
+  background: rgba(0, 204, 255, 0.05);
+  transform: translateX(6px);
+}
+
+.social-icon {
+  font-family: var(--font-title);
+  font-size: 0.9rem;
+  color: var(--cyan);
+  background: rgba(0, 204, 255, 0.1);
+  border: 1px solid var(--cyan);
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.social-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.social-name {
+  font-family: var(--font-title);
+  font-size: 1.1rem;
+  letter-spacing: 0.06em;
+}
+
+.social-handle {
+  font-size: 0.8rem;
+  color: var(--cyan-dim);
+}
+
+.social-arrow {
+  font-size: 1.2rem;
+  color: var(--cyan);
+  transition: transform var(--transition-fast);
+}
+
+.social-card:hover .social-arrow {
+  transform: translateX(4px);
+}
+
+/* ================================================
+   SECCIÓN: TIMELINE
+   ================================================ */
+.timeline-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding-left: 2rem;
+  position: relative;
+}
+
+/* La línea vertical del timeline */
+.timeline-list::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 8px;
+  bottom: 8px;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--cyan), rgba(0, 204, 255, 0.1));
+}
+
+.timeline-item {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+  padding-bottom: 2rem;
+  position: relative;
+}
+
+/* El punto en la línea de tiempo */
+.timeline-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--bg-dark);
+  border: 2px solid var(--cyan-dim);
+  flex-shrink: 0;
+  margin-top: 4px;
+  position: absolute;
+  left: -2.37rem;
+  transition: var(--transition-med);
+}
+
+.timeline-item.current .timeline-dot {
+  background: var(--cyan);
+  border-color: var(--cyan);
+  box-shadow: 0 0 12px var(--cyan);
+}
+
+.timeline-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.timeline-date {
+  font-family: var(--font-title);
+  font-size: 0.8rem;
+  color: var(--cyan);
+  letter-spacing: 0.1em;
+}
+
+.timeline-title {
+  font-family: var(--font-title);
+  font-size: 1.2rem;
+  color: var(--white);
+  letter-spacing: 0.05em;
+}
+
+.timeline-desc {
+  font-size: 0.85rem;
+  color: var(--white-dim);
+  line-height: 1.5;
+}
+
+/* ================================================
+   SECCIÓN: SYSTEM / RESUME
+   ================================================ */
+.system-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 500px;
+}
+
+.system-option {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  background: rgba(0, 21, 51, 0.8);
+  border: 1px solid rgba(0, 204, 255, 0.2);
+  border-radius: 4px;
+}
+
+.system-icon {
+  font-size: 1.5rem;
+  color: var(--cyan);
+  width: 44px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.system-info {
+  flex: 1;
+}
+
+.system-title {
+  font-family: var(--font-title);
+  font-size: 1.1rem;
+  letter-spacing: 0.06em;
+  margin-bottom: 2px;
+}
+
+.system-desc {
+  font-size: 0.8rem;
+  color: var(--white-dim);
+}
+
+.system-btn {
+  font-family: var(--font-title);
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  padding: 8px 18px;
+  border: 1px solid var(--cyan);
+  color: var(--cyan);
+  text-decoration: none;
+  background: rgba(0, 204, 255, 0.08);
+  transition: var(--transition-fast);
+  clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
+}
+
+.system-btn:hover {
+  background: var(--cyan);
+  color: var(--bg-dark);
+}
+
+/* ================================================
+   SCROLLBAR PERSONALIZADO
+   Para que la barra de scroll también tenga el estilo P3R
+   ================================================ */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: var(--cyan-dim);
+  border-radius: 2px;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--cyan); }
+
+/* ================================================
+   CURSOR PERSONALIZADO
+   Dos elementos superpuestos: un anillo exterior y
+   un punto interior. El anillo tiene un pequeño lag
+   en la animación para crear profundidad visual.
+   ================================================ */
+
+/* Ocultamos el cursor del sistema en todo el sitio */
+* { cursor: none !important; }
+
+.custom-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none; /* el cursor no interfiere con clics */
+  z-index: 99999;
+  /* transform: translate(-50%, -50%) centra el cursor
+     en la posición real del mouse */
+  transform: translate(-50%, -50%);
+  /* mix-blend-mode: difference invierte los colores del fondo
+     debajo del cursor — efecto común en portafolios de diseño */
+  mix-blend-mode: difference;
+}
+
+.cursor-ring {
+  width: 28px;
+  height: 28px;
+  border: 2px solid var(--cyan);
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  /* El anillo tiene una transición ligeramente más lenta
+     que el punto — crea el efecto de "arrastre" */
+  transition: width 0.15s ease, height 0.15s ease, border-color 0.15s ease;
+}
+
+.cursor-dot {
+  width: 5px;
+  height: 5px;
+  background: var(--cyan);
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Cuando el cursor está sobre algo clickeable, el anillo se expande */
+.cursor-hover .cursor-ring {
+  width: 44px;
+  height: 44px;
+  border-color: var(--red-accent);
+}
+
+.cursor-hover .cursor-dot {
+  background: var(--red-accent);
+}
+
+/* ================================================
+   SPLASH SCREEN
+   Pantalla de bienvenida que cubre todo al cargar.
+   Se hace invisible con opacity:0 al presionar una tecla.
+   pointer-events:none hace que los clics la "atraviesen"
+   una vez invisible.
+   ================================================ */
+.splash-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 9000; /* encima de todo el contenido */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  /* La transición de salida: fade de 0.6s */
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+/* La clase .hidden la agrega JS para ocultar el splash */
+.splash-screen.hidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(1.02); /* se expande ligeramente al desaparecer */
+}
+
+/* Fondo del splash: gradiente más dramático que el fondo principal */
+.splash-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 30% 50%, rgba(0, 204, 255, 0.15) 0%, transparent 60%),
+    radial-gradient(ellipse at 70% 50%, rgba(255, 34, 68, 0.1) 0%, transparent 60%),
+    linear-gradient(160deg, #000510 0%, #001033 50%, #000d1a 100%);
+}
+
+/* El texto diagonal gigante de fondo — como el "PERSONA 3" de P3R */
+.splash-big-text {
+  position: absolute;
+  font-family: var(--font-title);
+  font-size: clamp(6rem, 18vw, 16rem); /* clamp() = tamaño fluido responsivo */
+  letter-spacing: 0.15em;
+  color: transparent;
+  /* -webkit-text-stroke dibuja solo el contorno del texto */
+  -webkit-text-stroke: 1px rgba(0, 204, 255, 0.08);
+  user-select: none;
+  white-space: nowrap;
+  transform: skewX(-8deg);
+  z-index: 0;
+}
+
+/* Contenido central del splash */
+.splash-center {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8rem;
+  text-align: center;
+}
+
+.splash-name {
+  font-family: var(--font-title);
+  font-size: clamp(2.5rem, 7vw, 5.5rem);
+  letter-spacing: 0.2em;
+  color: var(--white);
+  /* El degradado rojo-blanco en el texto, igual que los títulos de sección */
+  background: linear-gradient(105deg, var(--red-accent) 0%, var(--red-accent) 30%, var(--white) 30%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  transform: skewX(-4deg);
+  display: inline-block;
+}
+
+.splash-role {
+  font-family: var(--font-body);
+  font-size: clamp(0.85rem, 2vw, 1.1rem);
+  color: var(--cyan);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.splash-specialty {
+  font-family: var(--font-body);
+  font-size: clamp(0.75rem, 1.5vw, 0.95rem);
+  color: var(--white-dim);
+  letter-spacing: 0.15em;
+}
+
+/* El "Press any key" con animación de parpadeo */
+.splash-prompt {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 2.5rem;
+  /* La animación blink se define en animations.css */
+  animation: blink 1.2s ease-in-out infinite;
+}
+
+.prompt-key {
+  color: var(--red-accent);
+  font-size: 0.8rem;
+}
+
+.prompt-text {
+  font-family: var(--font-title);
+  font-size: 0.9rem;
+  letter-spacing: 0.25em;
+  color: var(--white-dim);
+}
+
+/* Líneas decorativas horizontales a los lados del nombre */
+.splash-center::before,
+.splash-center::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+}
+
+.splash-center::before { top: -2rem; }
+.splash-center::after  { bottom: -1rem; }
+
+/* Pie del splash */
+.splash-footer {
+  position: absolute;
+  bottom: 2rem;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 3rem;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.3);
+  letter-spacing: 0.1em;
+  font-family: var(--font-body);
+  z-index: 1;
+}
+
+/* ================================================
+   SIDEBAR — MEJORAS FASE 2
+   Nivel del personaje, arcana y bloque de atributos
+   ================================================ */
+
+/* Contenedor del avatar para posicionar el nivel encima */
+.char-avatar {
+  position: relative;
+  flex-shrink: 0;
+}
+
+/* Etiqueta de nivel flotante — como "Lv 49" en la pantalla de P3R */
+.char-level {
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+  background: var(--bg-dark);
+  border: 1px solid var(--cyan);
+  border-radius: 3px;
+  padding: 1px 5px;
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+}
+
+.lv-text {
+  font-family: var(--font-body);
+  font-size: 0.55rem;
+  color: var(--white-dim);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+.lv-num {
+  font-family: var(--font-title);
+  font-size: 0.85rem;
+  color: var(--cyan);
+  line-height: 1;
+}
+
+/* Arcana del personaje — texto pequeño bajo el rol */
+.char-arcana {
+  font-size: 0.65rem;
+  color: var(--pink-accent);
+  letter-spacing: 0.08em;
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+/* Números grandes de HP/SP — estilo P3R */
+.stat-numbers {
+  display: flex;
+  align-items: baseline;
+  gap: 1px;
+  min-width: 58px;
+  justify-content: flex-end;
+}
+
+/* Reemplaza el .stat-value simple de Fase 1 */
+.stat-value {
+  font-family: var(--font-title);
+  font-size: 1rem;  /* más grande que antes */
+  color: #22cc88;
+  line-height: 1;
+}
+
+.stat-value.sp { color: #ffcc22; }
+
+.stat-max {
+  font-family: var(--font-body);
+  font-size: 0.6rem;
+  color: var(--white-dim);
+  font-weight: 500;
+}
+
+/* ---- BLOQUE DE ATRIBUTOS (STR/MAG/END/AGI) ---- */
+.attr-block {
+  padding: 0.75rem 1.5rem;
+  border-bottom: 1px solid var(--white-ghost);
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 0.5rem;
+}
+
+.attr-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* El nombre del atributo (STR, MAG...) */
+.attr-name {
+  font-family: var(--font-title);
+  font-size: 0.7rem;
+  color: var(--cyan-dim);
+  min-width: 28px;
+  letter-spacing: 0.05em;
+}
+
+/* El valor en texto (Java, SQL...) */
+.attr-val {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  color: var(--white-dim);
+  flex: 1;
+  font-weight: 500;
+}
+
+/* El número del atributo — alineado a la derecha */
+.attr-num {
+  font-family: var(--font-title);
+  font-size: 0.85rem;
+  color: var(--white);
+  min-width: 28px;
+  text-align: right;
+}
+
+/* ================================================
+   OVERLAY DE TRANSICIÓN ENTRE SECCIONES
+   Un flash blanco/cyan que aparece brevemente
+   al cambiar de sección — como el sweep de P3R.
+   JS agrega/quita la clase .flash para dispararlo.
+   ================================================ */
+.transition-overlay {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    rgba(0, 204, 255, 0.15) 0%,
+    rgba(255, 34, 68, 0.1) 100%
+  );
+  z-index: 8000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+}
+
+.transition-overlay.flash {
+  opacity: 1;
+}
+
+/* ================================================
+   FASE 3 — PROYECTOS: FILTROS, CARDS Y MODAL
+   ================================================ */
+
+/* ---- BARRA DE FILTROS ---- */
+.filter-bar {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+
+/* Los botones de filtro tienen el mismo clip-path inclinado
+   que los tags, pero más grandes y con estado activo */
+.filter-btn {
+  font-family: var(--font-title);
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  padding: 6px 18px;
+  border: 1px solid rgba(0, 204, 255, 0.3);
+  color: var(--cyan-dim);
+  background: transparent;
+  cursor: none; /* usamos nuestro cursor custom */
+  transition: all var(--transition-fast);
+  clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+  position: relative;
+}
+
+.filter-btn:hover {
+  border-color: var(--cyan);
+  color: var(--cyan);
+  background: rgba(0, 204, 255, 0.08);
+}
+
+/* El filtro activo tiene fondo sólido — como el ítem activo del menú */
+.filter-btn.active {
+  background: var(--cyan);
+  color: var(--bg-dark);
+  border-color: var(--cyan);
+  font-weight: 700;
+}
+
+/* ================================================
+   CARDS DE PROYECTOS — Estilo P3R + collage
+   ================================================ */
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1.25rem;
+  /* Permite scroll vertical dentro de la sección */
+  overflow-y: auto;
+  max-height: calc(100vh - 220px);
+  padding-bottom: 1rem;
+  padding-right: 4px; /* espacio para el scrollbar */
+}
+
+.project-card {
+  background: rgba(0, 13, 26, 0.9);
+  border: 1px solid rgba(0, 204, 255, 0.2);
+  /* clip-path con esquina cortada en la esquina inferior derecha — sello P3R */
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%);
+  display: flex;
+  flex-direction: column;
+  cursor: none;
+  transition: border-color var(--transition-med), transform var(--transition-med);
+  /* Oculta el overflow para que el clip-path funcione limpio */
+  overflow: hidden;
+}
+
+.project-card:hover {
+  border-color: var(--cyan);
+  transform: translateY(-4px);
+}
+
+/* Las cards filtradas (no coinciden) se desvanecen y encogen */
+.project-card.filtered-out {
+  opacity: 0;
+  transform: scale(0.95);
+  pointer-events: none;
+  /* Para que no ocupen espacio en el grid usamos max-height
+     en lugar de display:none — así la animación de CSS funciona */
+  transition:
+    opacity var(--transition-med),
+    transform var(--transition-med);
+}
+
+/* ---- ÁREA DE IMAGEN CON EFECTO DUOTONO ---- */
+/* 
+   El efecto duotono funciona en 3 capas:
+   1. .card-image: fondo con el color --duo-color (viene del HTML)
+   2. Una imagen de fondo (cuando el usuario agregue su foto)
+      con filter:grayscale para convertirla a gris
+   3. .card-image-overlay: mezcla el gris con el color base
+      usando mix-blend-mode:multiply
+   
+   Sin imagen, el efecto muestra un gradiente geométrico
+   abstracto que también se ve bien.
+*/
+.card-image {
+  height: 140px;
+  background:
+    /* Patrón geométrico abstracto — placeholder visual hasta tener foto */
+    repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 10px,
+      rgba(255,255,255,0.03) 10px,
+      rgba(255,255,255,0.03) 20px
+    ),
+    /* El color duotono viene de la variable --duo-color del HTML */
+    linear-gradient(135deg, var(--duo-color, #ff6600) 0%, color-mix(in srgb, var(--duo-color, #ff6600) 60%, #000) 100%);
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+/* Cuando haya una imagen real, se aplica así en el HTML:
+   style="--duo-color:#ff6600; background-image: url('assets/img/proyecto1.jpg')"
+   Y el overlay hace el duotono automáticamente */
+.card-image-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    transparent 40%,
+    rgba(0, 13, 26, 0.9) 100%
+  );
+}
+
+/* El badge de nivel en la esquina superior — como "Lv 34" en P3R */
+.card-lv-badge {
+  position: absolute;
+  top: 10px;
+  left: 12px;
+  font-family: var(--font-title);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  color: var(--white);
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 2px 8px;
+  backdrop-filter: blur(4px);
+}
+
+/* ---- CUERPO DE LA CARD ---- */
+.card-body {
+  padding: 1rem 1rem 0.5rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.project-name {
+  font-family: var(--font-title);
+  font-size: 1.2rem;
+  letter-spacing: 0.04em;
+  color: var(--white);
+  line-height: 1.1;
+}
+
+.project-desc {
+  font-size: 0.8rem;
+  color: var(--white-dim);
+  line-height: 1.6;
+  flex: 1;
+}
+
+.project-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+/* Botón de detalle en la parte inferior de la card */
+.card-detail-btn {
+  font-family: var(--font-title);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  color: var(--cyan);
+  background: rgba(0, 204, 255, 0.05);
+  border: none;
+  border-top: 1px solid rgba(0, 204, 255, 0.2);
+  padding: 8px 1rem;
+  text-align: right;
+  cursor: none;
+  transition: background var(--transition-fast), color var(--transition-fast);
+  width: 100%;
+}
+
+.card-detail-btn:hover {
+  background: rgba(0, 204, 255, 0.12);
+  color: var(--white);
+}
+
+/* ================================================
+   MODAL DE DETALLE — Estilo pantalla de stats P3R
+   (Referencia: imagen 3, pantalla de Yukari con
+    fondo blanco/negro y stats a la izquierda)
+   ================================================ */
+.project-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 7000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Invisible por defecto */
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition-med);
+}
+
+/* Cuando JS agrega .open, el modal se hace visible */
+.project-modal.open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* El fondo oscuro semi-transparente detrás del panel */
+.modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 5, 15, 0.85);
+  backdrop-filter: blur(6px);
+}
+
+/* El panel principal — dos columnas como la pantalla de stats */
+.modal-panel {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  width: min(860px, 92vw);
+  max-height: 90vh;
+  background: var(--bg-dark);
+  border: 1px solid rgba(0, 204, 255, 0.3);
+  /* Esquina cortada grande — muy P3R */
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 32px), calc(100% - 32px) 100%, 0 100%);
+  /* Entra desde abajo al abrirse */
+  transform: translateY(20px);
+  transition: transform var(--transition-med);
+  overflow: hidden;
+}
+
+.project-modal.open .modal-panel {
+  transform: translateY(0);
+}
+
+/* ---- Columna izquierda del modal: imagen grande ---- */
+.modal-image-col {
+  width: 280px;
+  min-width: 280px;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.modal-image {
+  width: 100%;
+  height: 100%;
+  min-height: 360px;
+  background:
+    repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 15px,
+      rgba(255,255,255,0.02) 15px,
+      rgba(255,255,255,0.02) 30px
+    ),
+    linear-gradient(160deg, #ff6600 0%, #001533 100%);
+  position: relative;
+  transition: background var(--transition-med);
+}
+
+.modal-image-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to right,
+    transparent 60%,
+    var(--bg-dark) 100%
+  );
+}
+
+/* El número de nivel gigante — como el "34" de la pantalla de Yukari */
+.modal-lv-big {
+  position: absolute;
+  bottom: -10px;
+  left: -10px;
+  font-family: var(--font-title);
+  font-size: 9rem;
+  line-height: 1;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(0, 204, 255, 0.2);
+  user-select: none;
+  z-index: 2;
+  letter-spacing: -0.02em;
+}
+
+/* ---- Columna derecha del modal: información ---- */
+.modal-info-col {
+  flex: 1;
+  padding: 2rem 2rem 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  overflow-y: auto;
+  position: relative;
+}
+
+.modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-family: var(--font-title);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  color: var(--white-dim);
+  background: none;
+  border: 1px solid rgba(255,255,255,0.15);
+  padding: 4px 12px;
+  cursor: none;
+  transition: all var(--transition-fast);
+}
+
+.modal-close:hover {
+  color: var(--red-accent);
+  border-color: var(--red-accent);
+}
+
+.modal-lv-label {
+  font-family: var(--font-title);
+  font-size: 0.85rem;
+  color: var(--cyan);
+  letter-spacing: 0.15em;
+  margin-top: 1.5rem;
+}
+
+.modal-title {
+  font-family: var(--font-title);
+  font-size: 2rem;
+  letter-spacing: 0.06em;
+  line-height: 1.1;
+  /* El mismo degradado rojo-blanco de los títulos de sección */
+  background: linear-gradient(105deg, var(--red-accent) 0%, var(--red-accent) 25%, var(--white) 25%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.modal-desc {
+  font-size: 0.9rem;
+  color: var(--white-dim);
+  line-height: 1.7;
+}
+
+/* Stats del proyecto en formato tabla — como los stats de personaje */
+.modal-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border-top: 1px solid var(--white-ghost);
+  border-bottom: 1px solid var(--white-ghost);
+  padding: 0.75rem 0;
+}
+
+.modal-stat-row {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 4px 0;
+}
+
+.modal-stat-name {
+  font-family: var(--font-title);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  color: var(--cyan-dim);
+  min-width: 64px;
+}
+
+.modal-stat-val {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: var(--white);
+  font-weight: 500;
+}
+
+.modal-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.modal-link {
+  display: inline-block;
+  font-family: var(--font-title);
+  font-size: 0.85rem;
+  letter-spacing: 0.12em;
+  padding: 10px 24px;
+  border: 1px solid var(--cyan);
+  color: var(--cyan);
+  text-decoration: none;
+  background: rgba(0, 204, 255, 0.06);
+  clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+  transition: all var(--transition-fast);
+  margin-top: auto;
+  align-self: flex-start;
+}
+
+.modal-link:hover {
+  background: var(--cyan);
+  color: var(--bg-dark);
+}
+
+/* ================================================
+   FASE 4 — SWEEP OVERLAY y POLISH
+   ================================================ */
+
+/* El panel de barrido diagonal — cubre toda la pantalla
+   durante la transición entre secciones.
+   Empieza sin clip-path (invisible por geometría).
+   JS agrega .sweep-in y .sweep-out para animarlo. */
+.sweep-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 5000;
+  pointer-events: none;
+  /* El gradiente diagonal: rojo-cyan, los colores de P3R */
+  background: linear-gradient(
+    105deg,
+    var(--red-accent) 0%,
+    var(--red-accent) 45%,
+    var(--cyan) 45%,
+    var(--cyan) 100%
+  );
+  /* Estado inicial: completamente oculto a la izquierda */
+  clip-path: polygon(0 0, 0 0, 0 100%, 0 100%);
+}
+
+/* El sweep entra cubriendo la pantalla */
+.sweep-overlay.sweep-in {
+  animation: sweepIn 0.25s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* El sweep sale descubriendo la nueva sección */
+.sweep-overlay.sweep-out {
+  animation: sweepOut 0.25s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* ---- Polish: borde luminoso en el sidebar al hacer hover ---- */
+.nav-item:hover::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--cyan);
+  opacity: 0.4;
+}
+
+/* ---- Polish: el número de nivel en el modal pulsa al abrir ---- */
+.project-modal.open .modal-lv-big {
+  animation: fadeInUp 0.5s 0.2s both;
+}
+
+/* ---- Polish: indicador de sección activa en la barra de navegación ---- 
+   Una línea de color debajo del ítem activo — visible en móvil principalmente */
+.nav-item.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 1.5rem;
+  right: 0;
+  height: 2px;
+  background: var(--red-accent);
+}
+
+/* ---- Polish: mejora del avatar placeholder con animación de borde ---- */
+@keyframes borderRotate {
+  from { filter: hue-rotate(0deg); }
+  to   { filter: hue-rotate(360deg); }
+}
+
+.avatar-placeholder:hover {
+  animation: borderRotate 2s linear infinite;
+}
+
+/* ---- Aseguramos que el custom cursor funcione también sobre el modal ---- */
+.project-modal * { cursor: none !important; }

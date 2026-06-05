@@ -1,0 +1,355 @@
+/* ================================================
+   ANIMATIONS.CSS — Keyframes y animaciones de entrada
+   Separamos las animaciones en su propio archivo porque:
+   1. Es más fácil encontrarlas y editarlas
+   2. Si el usuario prefiere sin animaciones (accesibilidad),
+      se puede deshabilitar este archivo sin tocar el resto
+   ================================================ */
+
+/* ---- Parpadeo del "Press any key" en el splash ---- */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.2; }
+}
+
+/* ---- Animación de entrada del sidebar ---- */
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* ---- Parpadeo del punto activo en el timeline ---- */
+@keyframes pulseDot {
+  0%, 100% {
+    box-shadow: 0 0 8px rgba(0, 204, 255, 0.6);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(0, 204, 255, 1);
+  }
+}
+
+/* ---- Escaneo de línea — efecto CRT/arcade ---- */
+@keyframes scanline {
+  0%   { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+
+/* ---- Fade + scale de entrada general ---- */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ---- Glitch del texto — para efectos puntuales ---- */
+@keyframes glitch {
+  0%, 100% { clip-path: inset(0 0 100% 0); }
+  20%       { clip-path: inset(20% 0 60% 0); transform: translateX(-4px); }
+  40%       { clip-path: inset(50% 0 30% 0); transform: translateX(4px); }
+  60%       { clip-path: inset(70% 0 10% 0); transform: translateX(-2px); }
+  80%       { clip-path: inset(10% 0 80% 0); transform: translateX(2px); }
+}
+
+/* ================================================
+   APLICACIÓN DE ANIMACIONES A ELEMENTOS
+   ================================================ */
+
+/* El sidebar entra desde la izquierda al cargar */
+.sidebar {
+  animation: slideInLeft 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Los ítems del menú entran escalonados */
+.nav-item:nth-child(1) { animation: fadeInUp 0.4s 0.1s both; }
+.nav-item:nth-child(2) { animation: fadeInUp 0.4s 0.15s both; }
+.nav-item:nth-child(3) { animation: fadeInUp 0.4s 0.2s both; }
+.nav-item:nth-child(4) { animation: fadeInUp 0.4s 0.25s both; }
+.nav-item:nth-child(5) { animation: fadeInUp 0.4s 0.3s both; }
+.nav-item:nth-child(6) { animation: fadeInUp 0.4s 0.35s both; }
+
+/* El punto del timeline actual parpadea */
+.timeline-item.current .timeline-dot {
+  animation: pulseDot 2s ease-in-out infinite;
+}
+
+/* Línea de escaneo sutil sobre toda la pantalla
+   — el efecto CRT característico de P3R */
+body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: rgba(0, 204, 255, 0.04);
+  animation: scanline 6s linear infinite;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* ================================================
+   RESPETA PREFERENCIAS DE ACCESIBILIDAD
+   Si el usuario tiene activado "reducir movimiento"
+   en su sistema operativo, desactiva las animaciones.
+   Esto es una buena práctica de accesibilidad web.
+   ================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ================================================
+   FASE 4 — ANIMACIONES AVANZADAS
+   ================================================ */
+
+/* ---- Barrido diagonal al cambiar de sección ---- 
+   Funciona con dos keyframes:
+   - sweepIn:  el panel entra desde la izquierda (cubre la pantalla)
+   - sweepOut: el panel sale hacia la derecha (descubre la nueva sección)
+   
+   clip-path: polygon() define un polígono que recorta el elemento.
+   Animando los puntos del polígono creamos el efecto de "barrido".
+*/
+@keyframes sweepIn {
+  0%   { clip-path: polygon(0 0, 0 0, 0 100%, 0 100%); }
+  100% { clip-path: polygon(0 0, 110% 0, 110% 100%, 0 100%); }
+}
+
+@keyframes sweepOut {
+  0%   { clip-path: polygon(0 0, 110% 0, 110% 100%, 0 100%); }
+  100% { clip-path: polygon(110% 0, 110% 0, 110% 100%, 110% 100%); }
+}
+
+/* ---- Entrada de los elementos dentro de una sección ---- 
+   Cada elemento hijo de una sección activa entra escalonado.
+   Se aplica con JS agregando la clase .section-entering.
+*/
+@keyframes itemReveal {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.section.active .section-header   { animation: itemReveal 0.4s 0.05s both; }
+.section.active .about-content    { animation: itemReveal 0.4s 0.15s both; }
+.section.active .filter-bar       { animation: itemReveal 0.4s 0.1s both; }
+.section.active .projects-grid    { animation: itemReveal 0.4s 0.2s both; }
+.section.active .skills-list      { animation: itemReveal 0.4s 0.15s both; }
+.section.active .social-grid      { animation: itemReveal 0.4s 0.15s both; }
+.section.active .timeline-list    { animation: itemReveal 0.4s 0.15s both; }
+.section.active .system-content   { animation: itemReveal 0.4s 0.15s both; }
+
+/* ---- Efecto de grain/ruido en el fondo ----
+   Un SVG de ruido fractal aplicado como pseudo-elemento sobre el fondo.
+   Da esa textura de película/pantalla que tiene P3R.
+*/
+.bg-layer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  background-size: 256px 256px;
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+/* ---- Líneas horizontales sutiles sobre el fondo ---- 
+   El efecto de "scan lines" de pantalla CRT que tiene P3R.
+   Complementa la línea de escaneo animada.
+*/
+.bg-grid::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 3px,
+    rgba(0, 0, 0, 0.08) 3px,
+    rgba(0, 0, 0, 0.08) 4px
+  );
+  pointer-events: none;
+}
+
+/* ---- Hover en el nombre del sidebar ---- */
+.char-name {
+  transition: color var(--transition-fast), text-shadow var(--transition-fast);
+  cursor: none;
+}
+
+.char-name:hover {
+  color: var(--cyan);
+  text-shadow: 0 0 20px rgba(0, 204, 255, 0.6);
+}
+
+/* ================================================
+   RESPONSIVIDAD — @media queries
+   
+   Estrategia: en pantallas pequeñas (< 768px)
+   el sidebar se convierte en una barra de navegación
+   inferior fija, como las apps móviles.
+   El contenido ocupa toda la pantalla.
+   ================================================ */
+@media (max-width: 768px) {
+
+  /* El layout cambia de horizontal (row) a vertical (column) */
+  .app-layout {
+    flex-direction: column;
+  }
+
+  /* El sidebar deja de ser una columna lateral */
+  .sidebar {
+    width: 100%;
+    height: auto;
+    min-width: unset;
+    flex-direction: row;        /* los elementos van en fila */
+    align-items: center;
+    padding: 0.6rem 1rem;
+    border-right: none;
+    border-bottom: 1px solid rgba(0, 204, 255, 0.15);
+    position: fixed;            /* fijo en la parte superior */
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    animation: none;            /* sin animación de slide en móvil */
+    overflow: hidden;
+  }
+
+  /* La línea decorativa del borde cambia de vertical a horizontal */
+  .sidebar::after {
+    right: 0;
+    left: 0;
+    top: auto;
+    bottom: -1px;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(to right, transparent, var(--cyan), var(--red-accent), transparent);
+  }
+
+  /* El header del sidebar se compacta */
+  .sidebar-header {
+    padding: 0;
+    border-bottom: none;
+    margin-bottom: 0;
+    flex-shrink: 0;
+  }
+
+  .char-level,
+  .char-role,
+  .char-arcana { display: none; } /* ocultar en móvil */
+
+  .char-name { font-size: 1rem; }
+
+  /* Las barras HP/SP se ocultan en móvil (poco espacio) */
+  .stat-bars,
+  .attr-block,
+  .sidebar-footer { display: none; }
+
+  /* El menú de navegación se convierte en barra horizontal */
+  .main-nav {
+    overflow-x: auto;
+    overflow-y: hidden;
+    flex: 1;
+    padding: 0 0.5rem;
+  }
+
+  .nav-list {
+    flex-direction: row;        /* ítems en fila */
+    gap: 0;
+    align-items: center;
+    height: 100%;
+  }
+
+  .nav-item {
+    padding: 0.4rem 0.8rem;
+    flex-shrink: 0;
+  }
+
+  /* En móvil el ítem activo no crece — no hay espacio */
+  .nav-item.active .nav-label { font-size: 0.85rem; }
+  .nav-label { font-size: 0.8rem; transform: none; }
+  .nav-arrow { display: none; } /* la flecha no tiene sentido en horizontal */
+
+  /* El contenido empieza debajo del sidebar fijo */
+  .content-area {
+    height: calc(100vh - 56px);
+    margin-top: 56px;
+  }
+
+  /* Las secciones tienen menos padding en móvil */
+  .section {
+    padding: 1.5rem 1.25rem;
+  }
+
+  .section-title { font-size: 2.2rem; }
+
+  /* About: de lado a lado → apilado */
+  .about-content {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .avatar-large-placeholder {
+    width: 100px;
+    height: 130px;
+    font-size: 2rem;
+  }
+
+  /* El grid de proyectos: una sola columna en móvil */
+  .projects-grid {
+    grid-template-columns: 1fr;
+    max-height: calc(100vh - 180px);
+  }
+
+  /* El modal ocupa toda la pantalla en móvil */
+  .modal-panel {
+    flex-direction: column;
+    width: 95vw;
+    max-height: 90vh;
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%);
+  }
+
+  .modal-image-col {
+    width: 100%;
+    min-width: unset;
+  }
+
+  .modal-image { min-height: 180px; }
+  .modal-lv-big { font-size: 5rem; }
+
+  /* El splash en móvil */
+  .splash-footer {
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 0 1rem;
+  }
+}
+
+/* Pantallas muy pequeñas (< 480px) */
+@media (max-width: 480px) {
+  .nav-label { font-size: 0.7rem; }
+  .section { padding: 1.25rem 1rem; }
+  .about-name { font-size: 1.8rem; }
+}

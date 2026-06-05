@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Edward | Portfolio</title>
+
+  <!-- Google Fonts: Rajdhani para el estilo P3R -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Bebas+Neue&display=swap" rel="stylesheet" />
+
+  <!-- Nuestros archivos CSS -->
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+</head>
+
+<body>
+
+  <!-- =============================================
+       CURSOR PERSONALIZADO
+       Un div vacío que seguirá al mouse con JS.
+       Lo posicionamos con position:fixed y lo movemos
+       actualizando style.left / style.top desde JS.
+       ============================================= -->
+  <div class="custom-cursor" id="customCursor">
+    <div class="cursor-ring"></div>
+    <div class="cursor-dot"></div>
+  </div>
+
+  <!-- =============================================
+       SPLASH SCREEN — Pantalla de bienvenida
+       Tiene z-index muy alto para estar sobre todo.
+       JS la hace desaparecer al presionar cualquier tecla.
+       ============================================= -->
+  <div class="splash-screen" id="splashScreen">
+    <div class="splash-bg"></div>
+
+    <!-- Texto grande diagonal — sello visual de P3R -->
+    <div class="splash-big-text">PORTFOLIO</div>
+
+    <!-- Contenido central -->
+    <div class="splash-center">
+      <div class="splash-name">EDWARD NEGRETE</div>
+      <div class="splash-role">Ingeniería en Sistemas Computacionales</div>
+      <div class="splash-specialty">Full-Stack & Videojuegos</div>
+      <!-- El parpadeo del "Press any key" -->
+      <div class="splash-prompt">
+        <span class="prompt-key">◆</span>
+        <span class="prompt-text">PRESIONA CUALQUIER TECLA</span>
+        <span class="prompt-key">◆</span>
+      </div>
+    </div>
+
+    <!-- Esquina inferior: versión / crédito -->
+    <div class="splash-footer">
+      <span>© 2025 Edward Negrete Bustos</span>
+      <span>ISC · ITSH · Sem 6</span>
+    </div>
+  </div>
+
+  <!-- =============================================
+       CAPA DE FONDO: el gradiente azul de P3R
+       ============================================= -->
+  <div class="bg-layer"></div>
+  <div class="bg-grid"></div>
+
+  <!-- =============================================
+       LAYOUT PRINCIPAL: sidebar + contenido
+       ============================================= -->
+  <div class="app-layout">
+
+    <!-- SIDEBAR: menú lateral izquierdo -->
+    <aside class="sidebar">
+
+      <!-- Logo / nombre del personaje (tú) -->
+      <div class="sidebar-header">
+        <div class="char-avatar">
+          <div class="avatar-placeholder">ED</div>
+          <!-- La etiqueta de nivel flotante encima del avatar -->
+          <div class="char-level">
+            <span class="lv-text">Lv</span>
+            <span class="lv-num">6</span>
+          </div>
+        </div>
+        <div class="char-info">
+          <span class="char-name">EDWARD</span>
+          <span class="char-role">ISC | Sem 6</span>
+          <!-- Arquetipo del personaje — como el "Lover" de Yukari en P3R -->
+          <span class="char-arcana">◈ Full-Stack</span>
+        </div>
+      </div>
+
+      <!-- Barras HP / SP estilo P3R con números grandes -->
+      <div class="stat-bars">
+        <div class="stat-row">
+          <span class="stat-label">HP</span>
+          <div class="stat-bar-wrap">
+            <div class="stat-bar hp-bar" style="--fill: 85%"></div>
+          </div>
+          <!-- Los números grandes son el estilo P3R:
+               el valor actual / el máximo -->
+          <div class="stat-numbers">
+            <span class="stat-value">425</span>
+            <span class="stat-max">/500</span>
+          </div>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label sp">SP</span>
+          <div class="stat-bar-wrap">
+            <div class="stat-bar sp-bar" style="--fill: 60%"></div>
+          </div>
+          <div class="stat-numbers">
+            <span class="stat-value sp">182</span>
+            <span class="stat-max">/300</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bloque de atributos numéricos — como los stats STR/MAG/END de P3R -->
+      <div class="attr-block">
+        <div class="attr-item">
+          <span class="attr-name">STR</span>
+          <span class="attr-val">Java</span>
+          <span class="attr-num">70</span>
+        </div>
+        <div class="attr-item">
+          <span class="attr-name">MAG</span>
+          <span class="attr-val">SQL</span>
+          <span class="attr-num">50</span>
+        </div>
+        <div class="attr-item">
+          <span class="attr-name">END</span>
+          <span class="attr-val">HTML/CSS</span>
+          <span class="attr-num">25</span>
+        </div>
+        <div class="attr-item">
+          <span class="attr-name">AGI</span>
+          <span class="attr-val">Kotlin</span>
+          <span class="attr-num">40</span>
+        </div>
+      </div>
+
+      <!-- Menú de navegación principal -->
+      <nav class="main-nav">
+        <ul class="nav-list">
+
+          <!-- Cada item tiene data-section para que JS sepa a dónde ir -->
+          <li class="nav-item active" data-section="about">
+            <span class="nav-arrow"></span>
+            <span class="nav-label">SOBRE MI</span>
+          </li>
+          <li class="nav-item" data-section="projects">
+            <span class="nav-arrow"></span>
+            <span class="nav-label">PROYECTOS</span>
+          </li>
+          <li class="nav-item" data-section="skills">
+            <span class="nav-arrow"></span>
+            <span class="nav-label">SKILLS</span>
+          </li>
+          <li class="nav-item" data-section="social">
+            <span class="nav-arrow"></span>
+            <span class="nav-label">SOCIAL LINK</span>
+          </li>
+          <li class="nav-item" data-section="timeline">
+            <span class="nav-arrow"></span>
+            <span class="nav-label">LINEA DEL TIEMPO</span>
+          </li>
+          <li class="nav-item" data-section="resume">
+            <span class="nav-arrow"></span>
+            <span class="nav-label">CONTACTO</span>
+          </li>
+
+        </ul>
+      </nav>
+
+      <!-- Pie del sidebar: controles tipo gamepad -->
+      <div class="sidebar-footer">
+        <span class="ctrl-hint"><kbd>↑↓</kbd> Navegar</span>
+        <span class="ctrl-hint"><kbd>↵</kbd> Confirmar</span>
+      </div>
+
+    </aside>
+
+    <!-- CONTENIDO: aquí se muestran las secciones -->
+    <main class="content-area">
+
+      <!-- ---- SECCIÓN: ABOUT ---- -->
+      <section class="section active" id="about">
+        <div class="section-header">
+          <h1 class="section-title">Sobre mí...</h1>
+          <div class="section-line"></div>
+        </div>
+        <div class="about-content">
+          <div class="about-avatar-large">
+            <div class="avatar-large-placeholder">ED</div>
+          </div>
+          <div class="about-text">
+            <h2 class="about-name">Edward Negrete Bustos</h2>
+            <p class="about-role">Estudiante de Ingeniería en Sistemas Computacionales</p>
+            <p class="about-institute">TecNM | Instituto Tecnológico Superior de Huauchinango</p>
+            <p class="about-bio">
+              Estudiante de 6to Semestre, con especialidad "ARQUITECTURA FULL-STACK Y VIDEOJUEGOS".
+              Apasionado de los videojuegos y el anime, construyendo proyectos reales
+              mientras aprendo las tecnologías que mueven la industria.
+            </p>
+            <div class="about-tags">
+              <span class="tag">Java</span>
+              <span class="tag">SQL</span>
+              <span class="tag">HTML/CSS/JS</span>
+              <span class="tag">Kotlin</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ---- SECCIÓN: PROJECTS ---- -->
+      <section class="section" id="projects">
+        <div class="section-header">
+          <h1 class="section-title">PROYECTOS</h1>
+          <div class="section-line"></div>
+        </div>
+
+        <!-- FILTROS: botones que filtran las cards por tecnología.
+             data-filter="all" muestra todas.
+             data-filter="java" muestra solo las que tienen java en data-tags. -->
+        <div class="filter-bar">
+          <button class="filter-btn active" data-filter="all">TODOS</button>
+          <button class="filter-btn" data-filter="java">Java</button>
+          <button class="filter-btn" data-filter="sql">SQL</button>
+          <button class="filter-btn" data-filter="html">HTML/CSS/JS</button>
+          <button class="filter-btn" data-filter="kotlin">Kotlin</button>
+        </div>
+
+        <!-- GRID DE CARDS
+             Cada card tiene:
+             - data-tags: lista de tecnologías en minúsculas para el filtrado
+             - data-id: identificador único para el modal
+             El área .card-image es donde va el efecto duotono -->
+        <div class="projects-grid" id="projectsGrid">
+
+          <!-- CARD 1 -->
+          <div class="project-card" data-tags="java sql" data-id="1">
+            <div class="card-image" style="--duo-color: #ff6600;">
+              <div class="card-image-overlay"></div>
+              <div class="card-lv-badge">Lv 03</div>
+            </div>
+            <div class="card-body">
+              <h3 class="project-name">Sistema de Gestión DB</h3>
+              <p class="project-desc">Aplicación de escritorio para administración de bases de datos con operaciones CRUD completas.</p>
+              <div class="project-tags">
+                <span class="tag small">Java</span>
+                <span class="tag small">SQL</span>
+              </div>
+            </div>
+            <!-- El botón de ver detalle — abre el modal -->
+            <button class="card-detail-btn" data-id="1">VER DETALLE →</button>
+          </div>
+
+          <!-- CARD 2 -->
+          <div class="project-card" data-tags="html kotlin" data-id="2">
+            <div class="card-image" style="--duo-color: #0055ff;">
+              <div class="card-image-overlay"></div>
+              <div class="card-lv-badge">Lv 04</div>
+            </div>
+            <div class="card-body">
+              <h3 class="project-name">App Móvil de Tareas</h3>
+              <p class="project-desc">Aplicación Android para gestión de tareas personales con notificaciones y sincronización local.</p>
+              <div class="project-tags">
+                <span class="tag small">Kotlin</span>
+                <span class="tag small">Android</span>
+              </div>
+            </div>
+            <button class="card-detail-btn" data-id="2">VER DETALLE →</button>
+          </div>
+
+          <!-- CARD 3 -->
+          <div class="project-card" data-tags="html java" data-id="3">
+            <div class="card-image" style="--duo-color: #aa00ff;">
+              <div class="card-image-overlay"></div>
+              <div class="card-lv-badge">Lv 05</div>
+            </div>
+            <div class="card-body">
+              <h3 class="project-name">Portafolio Web</h3>
+              <p class="project-desc">Este mismo portafolio — construido con HTML, CSS y JS puro con estética de Persona 3 Reload.</p>
+              <div class="project-tags">
+                <span class="tag small">HTML/CSS</span>
+                <span class="tag small">JavaScript</span>
+              </div>
+            </div>
+            <button class="card-detail-btn" data-id="3">VER DETALLE →</button>
+          </div>
+
+          <!-- CARD 4 -->
+          <div class="project-card" data-tags="sql java" data-id="4">
+            <div class="card-image" style="--duo-color: #00aa55;">
+              <div class="card-image-overlay"></div>
+              <div class="card-lv-badge">Lv 02</div>
+            </div>
+            <div class="card-body">
+              <h3 class="project-name">Sistema de Reportes</h3>
+              <p class="project-desc">Generador de reportes estadísticos con exportación a PDF desde una base de datos relacional.</p>
+              <div class="project-tags">
+                <span class="tag small">SQL</span>
+                <span class="tag small">Java</span>
+              </div>
+            </div>
+            <button class="card-detail-btn" data-id="4">VER DETALLE →</button>
+          </div>
+
+        </div><!-- fin projects-grid -->
+      </section>
+
+      <!-- ================================================
+           MODAL DE DETALLE DE PROYECTO
+           Está FUERA de las secciones para que pueda
+           aparecer sobre cualquier parte del sitio.
+           JS lo activa añadiendo la clase .open.
+           ================================================ -->
+      <div class="project-modal" id="projectModal">
+        <!-- El backdrop oscuro detrás del modal — clic aquí lo cierra -->
+        <div class="modal-backdrop" id="modalBackdrop"></div>
+
+        <!-- El panel del modal — estilo pantalla de stats de P3R -->
+        <div class="modal-panel">
+
+          <!-- Columna izquierda: imagen con duotono grande -->
+          <div class="modal-image-col">
+            <div class="modal-image" id="modalImage">
+              <div class="modal-image-overlay"></div>
+            </div>
+            <!-- El nivel grande al estilo P3R (el "34" gigante de Yukari) -->
+            <div class="modal-lv-big" id="modalLvBig">05</div>
+          </div>
+
+          <!-- Columna derecha: información del proyecto -->
+          <div class="modal-info-col">
+
+            <!-- Botón cerrar -->
+            <button class="modal-close" id="modalClose">✕ CERRAR</button>
+
+            <div class="modal-lv-label" id="modalLvLabel">Lv 05</div>
+            <h2 class="modal-title" id="modalTitle">Portafolio Web</h2>
+            <p class="modal-desc" id="modalDesc">Descripción del proyecto.</p>
+
+            <!-- Stats del proyecto al estilo stats de personaje -->
+            <div class="modal-stats">
+              <div class="modal-stat-row">
+                <span class="modal-stat-name">ESTADO</span>
+                <span class="modal-stat-val" id="modalStatus">En desarrollo</span>
+              </div>
+              <div class="modal-stat-row">
+                <span class="modal-stat-name">STACK</span>
+                <span class="modal-stat-val" id="modalStack">—</span>
+              </div>
+              <div class="modal-stat-row">
+                <span class="modal-stat-name">TIPO</span>
+                <span class="modal-stat-val" id="modalType">—</span>
+              </div>
+            </div>
+
+            <!-- Tags de tecnologías -->
+            <div class="modal-tags" id="modalTags"></div>
+
+            <!-- Enlace al repositorio -->
+            <a class="modal-link" id="modalLink" href="#" target="_blank">
+              VER EN GITHUB →
+            </a>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- ---- SECCIÓN: SKILLS ---- -->
+      <section class="section" id="skills">
+        <div class="section-header">
+          <h1 class="section-title">SKILLS</h1>
+          <div class="section-line"></div>
+        </div>
+        <div class="skills-list">
+          <div class="skill-row">
+            <span class="skill-name">Java</span>
+            <div class="skill-bar-wrap">
+              <div class="skill-bar" style="--skill-fill: 70%"></div>
+            </div>
+            <span class="skill-pct">70</span>
+          </div>
+          <div class="skill-row">
+            <span class="skill-name">SQL</span>
+            <div class="skill-bar-wrap">
+              <div class="skill-bar" style="--skill-fill: 50%"></div>
+            </div>
+            <span class="skill-pct">50</span>
+          </div>
+          <div class="skill-row">
+            <span class="skill-name">HTML / CSS</span>
+            <div class="skill-bar-wrap">
+              <div class="skill-bar" style="--skill-fill: 25%"></div>
+            </div>
+            <span class="skill-pct">25</span>
+          </div>
+          <div class="skill-row">
+            <span class="skill-name">JavaScript</span>
+            <div class="skill-bar-wrap">
+              <div class="skill-bar" style="--skill-fill: 20%"></div>
+            </div>
+            <span class="skill-pct">20</span>
+          </div>
+          <div class="skill-row">
+            <span class="skill-name">Kotlin</span>
+            <div class="skill-bar-wrap">
+              <div class="skill-bar" style="--skill-fill: 40%"></div>
+            </div>
+            <span class="skill-pct">40</span>
+          </div>
+          <div class="skill-row">
+            <span class="skill-name">Git</span>
+            <div class="skill-bar-wrap">
+              <div class="skill-bar" style="--skill-fill: 20%"></div>
+            </div>
+            <span class="skill-pct">20</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ---- SECCIÓN: SOCIAL LINK ---- -->
+      <section class="section" id="social">
+        <div class="section-header">
+          <h1 class="section-title">SOCIAL LINK</h1>
+          <div class="section-line"></div>
+        </div>
+        <div class="social-grid">
+          <a class="social-card" href="https://github.com/Edward2418" target="_blank">
+            <span class="social-icon">GH</span>
+            <div class="social-info">
+              <span class="social-name">GitHub</span>
+              <span class="social-handle">@edward2418</span>
+            </div>
+            <span class="social-arrow">→</span>
+          </a>
+          <a class="social-card" href="https://linkedin.com/" target="_blank">
+            <span class="social-icon">LI</span>
+            <div class="social-info">
+              <span class="social-name">LinkedIn</span>
+              <span class="social-handle">Edward</span>
+            </div>
+            <span class="social-arrow">→</span>
+          </a>
+        </div>
+      </section>
+
+      <!-- ---- SECCIÓN: TIMELINE ---- -->
+      <section class="section" id="timeline">
+        <div class="section-header">
+          <h1 class="section-title">TIMELINE</h1>
+          <div class="section-line"></div>
+        </div>
+        <div class="timeline-list">
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <span class="timeline-date">2023</span>
+              <h3 class="timeline-title">Inicio de carrera | ISC</h3>
+              <p class="timeline-desc">TecNM | Instituto Tecnológico Superior de Huauchinango</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <span class="timeline-date">2024</span>
+              <h3 class="timeline-title">Materias cursadas</h3>
+              <p class="timeline-desc">Programación Orientada a Objetos, Fundamentos de Bases de Datos, Desarrollo de Aplicaciones Móviles , Ingeniería de Software</p>
+            </div>
+          </div>
+          <div class="timeline-item current">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <span class="timeline-date">2025 | Presente</span>
+              <h3 class="timeline-title">6º Semestre</h3>
+              <p class="timeline-desc">Proyectos activos en desarrollo</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ---- SECCIÓN: SYSTEM / RESUME ---- -->
+      <section class="section" id="resume">
+        <div class="section-header">
+          <h1 class="section-title">SYSTEM</h1>
+          <div class="section-line"></div>
+        </div>
+        <div class="system-content">
+          <div class="system-option">
+            <span class="system-icon">⬇</span>
+            <div class="system-info">
+              <h3 class="system-title">Descargar CV</h3>
+              <p class="system-desc">Currículum en formato PDF</p>
+            </div>
+            <a class="system-btn" href="assets/cv-edward.pdf" download>DOWNLOAD</a>
+          </div>
+          <div class="system-option">
+            <span class="system-icon">✉</span>
+            <div class="system-info">
+              <h3 class="system-title">Contacto directo</h3>
+              <p class="system-desc">d23390169@huauchinango.tecnm.mx</p>
+            </div>
+            <a class="system-btn" href="mailto:edward@email.com">SEND</a>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+  </div><!-- fin .app-layout -->
+
+  <!-- =============================================
+       SWEEP OVERLAY — El barrido diagonal de P3R
+       JS lo anima con las clases .sweep-in y .sweep-out
+       ============================================= -->
+  <div class="sweep-overlay" id="sweepOverlay"></div>
+
+  <!-- Script al final del body para que el HTML ya esté cargado cuando JS se ejecute -->
+  <script src="js/main.js"></script>
+
+</body>
+</html>
