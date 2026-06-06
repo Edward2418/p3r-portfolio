@@ -69,28 +69,57 @@ body {
    FONDO — Capas del fondo azul de P3R
    Dos divs superpuestos: el gradiente base + la cuadrícula
    ================================================ */
+/* ================================================
+   FONDO — Fase Visual 2: distorsión de onda
+   ================================================ */
+
+/* El SVG de filtros es invisible — solo define los efectos */
+.svg-filters {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
 .bg-layer {
   position: fixed;
-  inset: 0; /* equivale a top:0; right:0; bottom:0; left:0 */
+  inset: 0;
+  /* Gradiente base: tres tonos de azul de P3R.
+     El gradiente va de 160deg para crear profundidad diagonal. */
   background: linear-gradient(
     160deg,
     var(--bg-dark) 0%,
-    var(--bg-mid)  40%,
+    var(--bg-mid)  45%,
     var(--bg-light) 100%
   );
   z-index: 0;
+
+  /* APLICACIÓN DEL FILTRO DE DISTORSIÓN.
+     filter: url(#wave-distort) referencia el filtro SVG
+     definido en el index.html por su id.
+     El navegador aplica el filtro en la GPU — 60fps sin costo de JS. */
+  filter: url(#wave-distort);
+
+  /* Escalar ligeramente para ocultar los bordes que el filtro
+     puede dejar en blanco al desplazar píxeles extremos */
+  transform: scale(1.05);
 }
 
-/* Cuadrícula sutil de perspectiva — característica visual de P3R */
+/* Cuadrícula de perspectiva — ahora también distorsionada */
 .bg-grid {
   position: fixed;
   inset: 0;
   background-image:
-    linear-gradient(rgba(0, 204, 255, 0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 204, 255, 0.04) 1px, transparent 1px);
-  background-size: 50px 50px;
+    linear-gradient(rgba(0, 204, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 204, 255, 0.05) 1px, transparent 1px);
+  background-size: 60px 60px;
   z-index: 1;
-  pointer-events: none; /* deja pasar los clics a los elementos de abajo */
+  pointer-events: none;
+  /* La cuadrícula también se distorsiona, con un filtro más suave
+     para que no compita visualmente con el fondo */
+  filter: url(#grid-distort);
+  transform: scale(1.08);
+  opacity: 0.7;
 }
 
 /* ================================================
@@ -2414,5 +2443,94 @@ kbd {
 @media (max-width: 768px) {
   .vertical-deco-text {
     display: none; /* no hay espacio en móvil */
+  }
+}
+
+/* ================================================
+   FASE VISUAL 2 — Capas adicionales del fondo
+
+   P3R tiene un fondo con múltiples capas de profundidad.
+   Lo replicamos con pseudo-elementos y divs extra.
+   ================================================ */
+
+/* Capa de viñeta — oscurece los bordes de la pantalla.
+   En cine se llama vignette. P3R la usa para enfocar
+   la atención al centro de la pantalla donde está el menú. */
+.bg-layer::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 30%,
+    rgba(0, 5, 15, 0.5) 100%
+  );
+  z-index: 1;
+}
+
+/* Destellos de luz secundarios — los "rayos" de luz
+   que se ven en el fondo de P3R vienen del ángulo superior izquierdo */
+.bg-layer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 15% 20%,
+      rgba(0, 100, 200, 0.2) 0%,
+      transparent 50%),
+    radial-gradient(ellipse at 85% 80%,
+      rgba(0, 50, 150, 0.15) 0%,
+      transparent 40%);
+  z-index: 1;
+  /* Este pseudo-elemento NO lleva el filtro de distorsión
+     para mantener los focos de luz estables */
+  filter: none;
+}
+
+/* La línea de escaneo CRT existente se mantiene — solo ajustamos
+   que vaya sobre el nuevo fondo distorsionado */
+body::after {
+  z-index: 9999; /* encima de todo, incluyendo el nuevo fondo */
+}
+
+/* Aseguramos que el sidebar tenga más contraste
+   contra el nuevo fondo dinámico */
+.sidebar {
+  background: rgba(0, 3, 10, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+/* El content-area necesita un fondo muy sutil
+   para que el contenido sea legible sobre la distorsión */
+.content-area::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 5, 15, 0.25);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Performance: en dispositivos con poca GPU,
+   desactivamos la distorsión para mantener 60fps */
+@media (prefers-reduced-motion: reduce) {
+  .bg-layer,
+  .bg-grid {
+    filter: none;
+    transform: none;
+  }
+}
+
+/* En móvil también desactivamos la distorsión
+   — los filtros SVG son pesados en móvil */
+@media (max-width: 768px) {
+  .bg-layer {
+    filter: none;
+    transform: none;
+  }
+  .bg-grid {
+    filter: none;
+    transform: none;
   }
 }

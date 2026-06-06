@@ -1432,3 +1432,77 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
 }); /* fin partículas */
+
+/* ================================================
+   FASE VISUAL 2 — Animación orgánica del fondo
+
+   El filtro SVG ya se anima solo con <animate>.
+   Pero agregamos una capa extra de movimiento en JS:
+   el fondo se desplaza sutilmente con el mouse,
+   creando un efecto de parallax como en P3R cuando
+   mueves el joystick en el menú.
+   ================================================ */
+document.addEventListener('DOMContentLoaded', () => {
+
+  const bgLayer = document.querySelector('.bg-layer');
+  const bgGrid  = document.querySelector('.bg-grid');
+  if (!bgLayer) return;
+
+  /* Seguimiento suave del mouse con lerp (interpolación lineal).
+     En lugar de mover el fondo exactamente con el mouse,
+     lo movemos hacia la posición del mouse gradualmente.
+     Esto da el movimiento fluido y "pesado" de P3R. */
+  let targetX = 0, targetY = 0;
+  let currentX = 0, currentY = 0;
+
+  /* La intensidad del parallax — cuánto se mueve el fondo
+     respecto al movimiento del mouse. Valores bajos = sutil. */
+  const PARALLAX_INTENSITY = 0.012;
+  /* El factor de lerp: 0.03 = muy suave (tarda en llegar),
+                        0.1  = más rápido.
+     P3R se siente pesado y deliberado, por eso usamos 0.04. */
+  const LERP_FACTOR = 0.04;
+
+  document.addEventListener('mousemove', (e) => {
+    /* Calculamos el desplazamiento relativo al centro de la pantalla.
+       Rango: -0.5 a +0.5 en ambos ejes */
+    targetX = (e.clientX / window.innerWidth  - 0.5) * PARALLAX_INTENSITY * 100;
+    targetY = (e.clientY / window.innerHeight - 0.5) * PARALLAX_INTENSITY * 100;
+  });
+
+  /* Función lerp: interpolación lineal entre a y b por factor t.
+     Mueve 'a' un porcentaje t hacia 'b' en cada frame.
+     Resultado: movimiento que se acelera y desacelera suavemente. */
+  function lerp(a, b, t) {
+    return a + (b - a) * t;
+  }
+
+  function animateBg() {
+    /* Avanzar currentX/Y hacia targetX/Y */
+    currentX = lerp(currentX, targetX, LERP_FACTOR);
+    currentY = lerp(currentY, targetY, LERP_FACTOR);
+
+    /* Aplicar el desplazamiento. scale(1.05) ya está en CSS
+       para ocultar bordes — el translate no supera ese margen. */
+    const transform = `scale(1.05) translate(${currentX}%, ${currentY}%)`;
+    bgLayer.style.transform = transform;
+
+    if (bgGrid) {
+      /* La cuadrícula se mueve a la mitad de velocidad del fondo
+         para crear sensación de profundidad entre capas */
+      const gridTransform = `scale(1.08) translate(${currentX * 0.5}%, ${currentY * 0.5}%)`;
+      bgGrid.style.transform = gridTransform;
+    }
+
+    requestAnimationFrame(animateBg);
+  }
+
+  /* No iniciamos el parallax si el usuario prefiere reducir movimiento */
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const isMobile = window.innerWidth <= 768;
+
+  if (!prefersReduced && !isMobile) {
+    animateBg();
+  }
+
+}); /* fin parallax */

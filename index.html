@@ -63,6 +63,94 @@
   </div>
 
   <!-- =============================================
+       FILTROS SVG — Definición del efecto underwater
+       Este SVG es invisible (width/height:0).
+       Solo define los filtros que el CSS referencia
+       con filter: url(#wave-distort).
+
+       Cadena de filtros (igual que los shaders de P3R):
+       1. feTurbulence  → genera ruido fractal orgánico
+       2. feDisplacementMap → usa ese ruido para desplazar píxeles
+       3. feColorMatrix → ajusta el tono a azul-cyan de P3R
+       ============================================= -->
+  <svg class="svg-filters" aria-hidden="true" focusable="false">
+    <defs>
+      <filter id="wave-distort" x="0%" y="0%" width="100%" height="100%"
+              color-interpolation-filters="sRGB">
+
+        <!-- feTurbulence genera el ruido fractal.
+             baseFrequency controla la "escala" de las olas:
+             valores bajos = olas grandes y suaves (más parecido a P3R)
+             numOctaves controla el detalle del ruido. -->
+        <feTurbulence
+          type="fractalNoise"
+          baseFrequency="0.012 0.008"
+          numOctaves="3"
+          seed="2"
+          result="noise">
+          <!-- animate cambia baseFrequency en el tiempo:
+               esto hace que el ruido "fluya" continuamente,
+               creando el movimiento de agua de P3R. -->
+          <animate
+            attributeName="baseFrequency"
+            dur="18s"
+            values="0.012 0.008; 0.010 0.012; 0.014 0.007; 0.012 0.008"
+            repeatCount="indefinite"/>
+        </feTurbulence>
+
+        <!-- feDisplacementMap toma el ruido y desplaza los píxeles
+             del elemento fuente (SourceGraphic) según ese ruido.
+             scale controla la intensidad del desplazamiento.
+             xChannelSelector/yChannelSelector: qué canal de color
+             del ruido controla el desplazamiento en X e Y. -->
+        <feDisplacementMap
+          in="SourceGraphic"
+          in2="noise"
+          scale="18"
+          xChannelSelector="R"
+          yChannelSelector="G"
+          result="displaced"/>
+
+        <!-- feColorMatrix ajusta los colores del resultado.
+             type="matrix" permite control fino de cada canal RGB.
+             Esta matriz potencia el canal azul y reduce el rojo,
+             empujando el tono hacia el azul-cyan de P3R. -->
+        <feColorMatrix
+          in="displaced"
+          type="matrix"
+          values="0.7 0   0   0  0.05
+                  0   0.8 0   0  0.08
+                  0   0.1 1.1 0  0.12
+                  0   0   0   1  0"/>
+      </filter>
+
+      <!-- Filtro secundario: solo distorsión, sin color.
+           Lo usamos en el bg-grid para que la cuadrícula
+           también se distorsione pero sin cambio de color. -->
+      <filter id="grid-distort" x="0%" y="0%" width="100%" height="100%">
+        <feTurbulence
+          type="fractalNoise"
+          baseFrequency="0.015 0.010"
+          numOctaves="2"
+          seed="5"
+          result="noise2">
+          <animate
+            attributeName="baseFrequency"
+            dur="22s"
+            values="0.015 0.010; 0.012 0.014; 0.018 0.009; 0.015 0.010"
+            repeatCount="indefinite"/>
+        </feTurbulence>
+        <feDisplacementMap
+          in="SourceGraphic"
+          in2="noise2"
+          scale="10"
+          xChannelSelector="R"
+          yChannelSelector="G"/>
+      </filter>
+    </defs>
+  </svg>
+
+  <!-- =============================================
        CAPA DE FONDO: el gradiente azul de P3R
        ============================================= -->
   <div class="bg-layer"></div>
