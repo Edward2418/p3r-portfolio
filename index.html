@@ -686,6 +686,16 @@
        ============================================= -->
   <div class="sweep-overlay" id="sweepOverlay"></div>
 
+  <!-- Howler.js — librería de audio para web.
+       Maneja formatos, autoplay policy y Web Audio API
+       automáticamente. Sin instalación, solo un script tag. -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.min.js"></script>
+
+  <!-- Botón de mute — discreto, esquina inferior derecha -->
+  <button class="mute-btn" id="muteBtn" title="Silenciar/Activar sonido" aria-label="Toggle sound">
+    <span class="mute-icon" id="muteIcon">♪</span>
+  </button>
+
   <!-- Script al final del body para que el HTML ya esté cargado cuando JS se ejecute -->
   <script src="js/main.js"></script>
 

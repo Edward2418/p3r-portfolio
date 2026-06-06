@@ -2548,13 +2548,15 @@ body::after {
    ================================================ */
 .menu-character {
   position: fixed;
-  /* Se posiciona justo al borde derecho del sidebar */
-  left: calc(var(--sidebar-width) - 60px);
+  /* Centrado entre el sidebar y el área de contenido.
+     left negativo respecto al sidebar para que la figura
+     quede mitad en el sidebar y mitad en el contenido,
+     igual que en P3R donde el protagonista solapa el menú */
+  left: calc(var(--sidebar-width) - 100px);
   bottom: 0;
-  /* Ancho generoso para que la figura se vea completa */
-  width: 340px;
-  height: 85vh;
-  z-index: 3; /* encima del fondo, debajo del contenido */
+  width: 480px;        /* más ancho para que la figura sea grande */
+  height: 92vh;        /* casi toda la altura de la ventana */
+  z-index: 3;
   pointer-events: none;
 
   display: flex;
@@ -2562,10 +2564,9 @@ body::after {
   align-items: center;
   justify-content: flex-end;
 
-  /* La transición de entrada al cargar */
   opacity: 0;
-  transform: translateY(30px);
-  transition: opacity 0.8s ease, transform 0.8s ease;
+  transform: translateY(20px);
+  transition: opacity 1s ease, transform 1s ease;
 }
 
 /* Una vez que JS agrega .visible, el personaje entra */
@@ -2675,9 +2676,189 @@ body::after {
 }
 
 /* En pantallas medianas lo hacemos más pequeño */
+@media (max-width: 1280px) {
+  .menu-character {
+    width: 380px;
+    left: calc(var(--sidebar-width) - 80px);
+  }
+}
+
 @media (max-width: 1100px) {
   .menu-character {
-    width: 260px;
-    left: calc(var(--sidebar-width) - 40px);
+    width: 300px;
+    left: calc(var(--sidebar-width) - 60px);
   }
+}
+
+/* ================================================
+   FASE VISUAL 4a — Polish general
+
+   Ajustes finos de proporciones, espaciado y
+   detalles visuales que hacen la diferencia entre
+   "se parece" y "se siente como P3R".
+   ================================================ */
+
+/* ---- Sidebar: más espacio para el menú inclinado ----
+   Con el ángulo de -28deg los ítems necesitan más
+   padding vertical para no apilarse visualmente */
+.nav-list {
+  gap: 8px; /* más separación entre ítems */
+  padding: 0.5rem 0;
+}
+
+.nav-item {
+  padding: 0.5rem 1.2rem; /* más alto para el ángulo */
+  overflow: visible; /* el texto inclinado puede sobresalir */
+}
+
+/* El ítem activo necesita más espacio porque es más grande */
+.nav-item.active {
+  padding: 0.7rem 1.2rem;
+}
+
+/* ---- Sidebar width aumentado para acomodar el texto inclinado ---- */
+:root {
+  --sidebar-width: 300px; /* era 280px — más espacio para los labels inclinados */
+}
+
+/* ---- Mejora del avatar: más P3R ---- */
+.avatar-placeholder {
+  background: linear-gradient(135deg, var(--bg-light), var(--bg-mid));
+  box-shadow: 0 0 0 1px var(--cyan), 0 0 12px rgba(0,204,255,0.3);
+}
+
+/* ---- La línea del section-header más dinámica ---- */
+.section-line {
+  background: linear-gradient(
+    90deg,
+    var(--red-accent) 0%,
+    var(--cyan) 30%,
+    transparent 100%
+  );
+  height: 1px;
+}
+
+/* ---- Mejora del cursor personalizado ----
+   En P3R el cursor tiene una forma más específica */
+.cursor-ring {
+  border-width: 1.5px;
+  /* Cuadrado rotado 45° en lugar de círculo — más P3R */
+  border-radius: 3px;
+  transform: translate(-50%, -50%) rotate(45deg);
+  transition: width 0.2s ease, height 0.2s ease,
+              transform 0.2s ease, border-color 0.15s ease;
+}
+
+.cursor-hover .cursor-ring {
+  transform: translate(-50%, -50%) rotate(45deg) scale(1.4);
+  border-color: var(--red-accent);
+}
+
+/* ---- Mejorar la sombra de drop del personaje ----
+   Más colores y más difusa para mejor integración */
+.menu-char-img {
+  filter:
+    brightness(1.2)
+    contrast(1.08)
+    drop-shadow(0 0 20px rgba(255, 170, 0, 0.5))
+    drop-shadow(0 0 60px rgba(200, 100, 0, 0.25))
+    drop-shadow(0 20px 40px rgba(0, 0, 0, 0.5));
+}
+
+/* ---- El halo más grande y visible ---- */
+.char-halo {
+  width: 280px;
+  height: 280px;
+  bottom: 8%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 150, 0, 0.25) 0%,
+    rgba(255, 80, 0, 0.1) 40%,
+    transparent 70%
+  );
+}
+
+/* ---- Sección About: el avatar placeholder más P3R ---- */
+.avatar-large-placeholder {
+  background: linear-gradient(
+    135deg,
+    var(--bg-light) 0%,
+    var(--bg-mid) 100%
+  );
+  border: 1px solid var(--cyan);
+  box-shadow:
+    0 0 0 1px rgba(0,204,255,0.3),
+    0 0 30px rgba(0,204,255,0.15),
+    inset 0 0 30px rgba(0,0,0,0.3);
+  /* Corte en esquina más pronunciado */
+  clip-path: polygon(0 0, 100% 0, 100% 80%, 88% 100%, 0 100%);
+}
+
+/* ---- Scrollbar aún más sutil ---- */
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-thumb { background: rgba(0, 204, 255, 0.3); }
+::-webkit-scrollbar-thumb:hover { background: var(--cyan); }
+
+/* ---- Glow en las barras HP/SP cuando están llenas ---- */
+.hp-bar {
+  box-shadow: 0 0 8px rgba(34, 204, 136, 0.6);
+}
+.sp-bar {
+  box-shadow: 0 0 8px rgba(255, 204, 34, 0.6);
+}
+
+/* ---- El sweep diagonal más rápido y definido ---- */
+.sweep-overlay {
+  background: linear-gradient(
+    105deg,
+    var(--red-accent) 0%,
+    var(--red-accent) 42%,
+    rgba(255,255,255,0.95) 42%,
+    rgba(255,255,255,0.95) 47%,
+    var(--cyan) 47%,
+    var(--cyan) 100%
+  );
+}
+
+@keyframes sweepIn {
+  0%   { clip-path: polygon(0 0, 0 0, 0 100%, 0 100%); }
+  100% { clip-path: polygon(0 0, 115% 0, 115% 100%, 0 100%); }
+}
+
+@keyframes sweepOut {
+  0%   { clip-path: polygon(0 0, 115% 0, 115% 100%, 0 100%); }
+  100% { clip-path: polygon(115% 0, 115% 0, 115% 100%, 115% 100%); }
+}
+
+/* ---- Botón de mute ---- */
+.mute-btn {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 9000;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(0, 204, 255, 0.3);
+  color: var(--cyan-dim);
+  width: 36px;
+  height: 36px;
+  border-radius: 4px;
+  cursor: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  transition: all var(--transition-fast);
+  clip-path: polygon(4px 0%, 100% 0%, calc(100% - 4px) 100%, 0% 100%);
+  backdrop-filter: blur(8px);
+}
+
+.mute-btn:hover {
+  border-color: var(--cyan);
+  color: var(--cyan);
+  background: rgba(0, 204, 255, 0.1);
+}
+
+.mute-btn.muted {
+  color: rgba(255,255,255,0.2);
+  border-color: rgba(255,255,255,0.1);
 }

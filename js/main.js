@@ -1578,3 +1578,168 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
 }); /* fin personaje menú */
+
+/* ================================================
+   FASE VISUAL 4a — Sistema de audio con Howler.js
+
+   ESTRUCTURA LISTA PARA TUS ARCHIVOS DE P3R:
+   Cuando tengas los archivos .mp3/.wav, ponlos en
+   assets/sounds/ con estos nombres exactos:
+   - cursor.mp3   → sonido al mover el cursor por el menú
+   - confirm.mp3  → sonido al confirmar/seleccionar sección
+   - cancel.mp3   → sonido al cerrar modal / Escape
+   - open.mp3     → sonido al abrir el portafolio (post-splash)
+
+   Por ahora usamos Web Audio API para efectos sintéticos.
+   Cuando agregues los archivos reales, solo cambias
+   useSynth = false y el sistema usa los archivos.
+   ================================================ */
+document.addEventListener('DOMContentLoaded', () => {
+
+  /* ---- Configuración ---- */
+  const useSynth = true; /* true = sonidos sintéticos, false = archivos reales */
+  let isMuted    = false;
+
+  /* ---- Web Audio API para efectos sintéticos ----
+     Cuando no hay archivos reales, generamos tonos
+     que se asemejan a los efectos de cursor de P3R.
+     AudioContext es la API nativa del navegador — sin librerías. */
+  let audioCtx = null;
+
+  function getAudioCtx() {
+    /* Creamos el contexto solo cuando el usuario interactúa.
+       Los navegadores bloquean el audio antes de interacción
+       (autoplay policy) — esto lo evita. */
+    if (!audioCtx) {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    return audioCtx;
+  }
+
+  /* Genera un tono corto — simula el cursor de P3R */
+  function playSynth(type = 'cursor') {
+    if (isMuted) return;
+
+    try {
+      const ctx  = getAudioCtx();
+      const osc  = ctx.createOscillator();
+      const gain = ctx.createGain();
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      /* Parámetros por tipo de sonido */
+      const params = {
+        cursor:  { freq: 800, type: 'sine',   attack: 0.005, decay: 0.08,  vol: 0.08 },
+        confirm: { freq: 600, type: 'square',  attack: 0.005, decay: 0.18,  vol: 0.06 },
+        cancel:  { freq: 350, type: 'sine',    attack: 0.005, decay: 0.12,  vol: 0.05 },
+        open:    { freq: 900, type: 'sine',    attack: 0.01,  decay: 0.3,   vol: 0.07 }
+      };
+
+      const p = params[type] || params.cursor;
+      const now = ctx.currentTime;
+
+      osc.type      = p.type;
+      osc.frequency.setValueAtTime(p.freq, now);
+      /* Glide de frecuencia — más P3R que un tono constante */
+      osc.frequency.exponentialRampToValueAtTime(p.freq * 0.7, now + p.decay);
+
+      gain.gain.setValueAtTime(0, now);
+      gain.gain.linearRampToValueAtTime(p.vol, now + p.attack);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + p.decay);
+
+      osc.start(now);
+      osc.stop(now + p.decay + 0.05);
+
+    } catch (e) {
+      /* Si el audio falla, el portafolio sigue funcionando */
+      console.warn('Audio no disponible:', e.message);
+    }
+  }
+
+  /* ---- Howler.js con archivos reales ----
+     Este bloque se activa cuando useSynth = false */
+  let sounds = {};
+
+  if (!useSynth && typeof Howl !== 'undefined') {
+    sounds = {
+      cursor:  new Howl({ src: ['assets/sounds/cursor.mp3'],  volume: 0.4 }),
+      confirm: new Howl({ src: ['assets/sounds/confirm.mp3'], volume: 0.5 }),
+      cancel:  new Howl({ src: ['assets/sounds/cancel.mp3'],  volume: 0.4 }),
+      open:    new Howl({ src: ['assets/sounds/open.mp3'],    volume: 0.6 })
+    };
+  }
+
+  /* ---- Función principal de reproducción ---- */
+  function playSound(type) {
+    if (isMuted) return;
+    if (useSynth) {
+      playSynth(type);
+    } else if (sounds[type]) {
+      sounds[type].play();
+    }
+  }
+
+  /* ---- Conectar sonidos a los eventos del menú ---- */
+  const navItems = document.querySelectorAll('.nav-item');
+  navItems.forEach(item => {
+    item.addEventListener('mouseenter', () => playSound('cursor'));
+    item.addEventListener('click',      () => playSound('confirm'));
+  });
+
+  /* Sonido en el modal de proyectos */
+  document.querySelectorAll('.card-detail-btn').forEach(btn => {
+    btn.addEventListener('click', () => playSound('confirm'));
+  });
+
+  const modalClose = document.getElementById('modalClose');
+  if (modalClose) {
+    modalClose.addEventListener('click', () => playSound('cancel'));
+  }
+
+  /* Sonido al cerrar con Escape */
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') playSound('cancel');
+    if (e.key === 'ArrowUp' || e.key === 'ArrowDown') playSound('cursor');
+  });
+
+  /* Sonido de apertura — al desaparecer el splash */
+  const splash = document.getElementById('splashScreen');
+  if (splash) {
+    const splashObserver = new MutationObserver(() => {
+      if (splash.classList.contains('hidden')) {
+        setTimeout(() => playSound('open'), 100);
+        splashObserver.disconnect();
+      }
+    });
+    splashObserver.observe(splash, { attributes: true });
+  }
+
+  /* ---- Botón de mute ---- */
+  const muteBtn  = document.getElementById('muteBtn');
+  const muteIcon = document.getElementById('muteIcon');
+
+  if (muteBtn) {
+    muteBtn.addEventListener('click', () => {
+      isMuted = !isMuted;
+      muteBtn.classList.toggle('muted', isMuted);
+      muteIcon.textContent = isMuted ? '♪̸' : '♪';
+
+      /* Si usamos Howler, también lo silenciamos globalmente */
+      if (!useSynth && typeof Howler !== 'undefined') {
+        Howler.mute(isMuted);
+      }
+    });
+  }
+
+  /* ---- Instrucciones para integrar archivos reales ----
+     Cuando tengas los .mp3 de P3R:
+     1. Cópialos a assets/sounds/ con los nombres correctos
+     2. Cambia useSynth = false al inicio de este bloque
+     3. Guarda y recarga — Howler los carga automáticamente
+
+     Los formatos que soporta Howler (en orden de preferencia):
+     ['assets/sounds/cursor.mp3', 'assets/sounds/cursor.ogg']
+     Si tienes ambos formatos, el navegador elige el compatible. */
+
+}); /* fin audio */
