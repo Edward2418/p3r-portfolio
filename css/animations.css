@@ -353,3 +353,54 @@ body::after {
   .section { padding: 1.25rem 1rem; }
   .about-name { font-size: 1.8rem; }
 }
+
+/* ================================================
+   FASE VISUAL 1 — Animaciones de tipografía P3R
+   ================================================ */
+
+/* Glow pulsante en el ítem activo del menú.
+   El glow de P3R no es estático — tiene una pulsación
+   muy sutil que le da vida. Lo logramos animando
+   el text-shadow entre dos estados de intensidad. */
+@keyframes menuGlowPulse {
+  0%, 100% {
+    text-shadow:
+      0  0  4px rgba(255, 255, 255, 0.9),
+      0  0  8px rgba(0, 204, 255, 0.8),
+      0  0 16px rgba(0, 204, 255, 0.6),
+      0  0 32px rgba(0, 204, 255, 0.35),
+      0  0 64px rgba(0, 204, 255, 0.15);
+  }
+  50% {
+    text-shadow:
+      0  0  6px rgba(255, 255, 255, 1),
+      0  0 12px rgba(0, 204, 255, 0.9),
+      0  0 24px rgba(0, 204, 255, 0.7),
+      0  0 48px rgba(0, 204, 255, 0.4),
+      0  0 80px rgba(0, 204, 255, 0.2);
+  }
+}
+
+.nav-item.active .nav-label {
+  animation: menuGlowPulse 2.5s ease-in-out infinite;
+}
+
+/* Entrada escalonada de los ítems del menú — ahora con el ángulo correcto.
+   Los ítems entran desde la izquierda (slideInLeft) pero
+   ya rotados, así se ven correcto desde el primer frame. */
+.nav-item:nth-child(1) { animation: fadeInUp 0.35s 0.08s both; }
+.nav-item:nth-child(2) { animation: fadeInUp 0.35s 0.13s both; }
+.nav-item:nth-child(3) { animation: fadeInUp 0.35s 0.18s both; }
+.nav-item:nth-child(4) { animation: fadeInUp 0.35s 0.23s both; }
+.nav-item:nth-child(5) { animation: fadeInUp 0.35s 0.28s both; }
+.nav-item:nth-child(6) { animation: fadeInUp 0.35s 0.33s both; }
+
+/* El texto vertical entra con un fade lento al cargar */
+@keyframes verticalTextReveal {
+  from { opacity: 0; transform: translateX(-20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.vertical-deco-text {
+  animation: verticalTextReveal 1.2s 0.5s both;
+}

@@ -5,10 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Edward | Portfolio</title>
 
-  <!-- Google Fonts: Rajdhani para el estilo P3R -->
+  <!-- Google Fonts
+       Nunito Sans: variable font usada en la recreación más fiel de P3R en CSS.
+       Soporta font-weight 900, italic y font-variation-settings "wdth" 75 (condensado).
+       Bebas Neue: conservada para títulos de sección que no van en el menú. -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Bebas+Neue&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wdth,wght@1,6..12,75,900;0,6..12,75,400;0,6..12,75,600&family=Bebas+Neue&display=swap" rel="stylesheet" />
 
   <!-- Nuestros archivos CSS -->
   <link rel="stylesheet" href="css/style.css" />
@@ -423,30 +426,73 @@
         </div>
       </section>
 
-      <!-- ---- SECCIÓN: SOCIAL LINK ---- -->
+      <!-- ---- SECCIÓN: SOCIAL LINK (gustos personales estilo P3R) ---- -->
       <section class="section" id="social">
         <div class="section-header">
           <h1 class="section-title">SOCIAL LINK</h1>
           <div class="section-line"></div>
         </div>
-        <div class="social-grid">
-          <a class="social-card" href="https://github.com/Edward2418" target="_blank">
-            <span class="social-icon">GH</span>
-            <div class="social-info">
-              <span class="social-name">GitHub</span>
-              <span class="social-handle">@edward2418</span>
+
+        <!-- Layout de dos paneles: lista izquierda + detalle derecha -->
+        <div class="sl-layout">
+
+          <!-- Panel izquierdo: lista de vínculos -->
+          <!-- JS genera las filas aquí automáticamente desde slData -->
+          <div class="sl-list" id="slList"></div>
+
+          <!-- Panel derecho: detalle del vínculo seleccionado -->
+          <!-- JS rellena este panel cuando el usuario selecciona un link -->
+          <div class="sl-detail" id="slDetail">
+
+            <!-- Estado inicial: instrucción para seleccionar -->
+            <div class="sl-empty-state" id="slEmptyState">
+              <div class="sl-empty-icon">◈</div>
+              <p class="sl-empty-text">Selecciona un Social Link<br>para ver su ficha</p>
             </div>
-            <span class="social-arrow">→</span>
+
+            <!-- Ficha del vínculo — oculta hasta que se seleccione uno -->
+            <div class="sl-card-detail" id="slCardDetail" style="display:none">
+
+              <!-- COLUMNA IZQUIERDA: información del vínculo -->
+              <div class="sl-info-col">
+                <div class="sl-detail-header">
+                  <div class="sl-arcana-badge" id="slArcana">La Estrella</div>
+                  <h2 class="sl-detail-name" id="slDetailName">Oguri Cap</h2>
+                  <p class="sl-detail-sub" id="slDetailSub">Uma Musume</p>
+                </div>
+                <div class="sl-rank-row">
+                  <div class="sl-rank-label">NIVEL DE VÍNCULO</div>
+                  <div class="sl-rank-num" id="slRankNum">10</div>
+                  <div class="sl-stars" id="slStars"></div>
+                </div>
+                <p class="sl-detail-desc" id="slDetailDesc"></p>
+                <div class="sl-detail-tags" id="slDetailTags"></div>
+                <blockquote class="sl-quote" id="slQuote"></blockquote>
+              </div>
+
+              <!-- COLUMNA DERECHA: ilustración SVG animada -->
+              <div class="sl-illus-col" id="slIllusCol">
+                <div class="sl-illus-bg" id="slIllusBg"></div>
+                <div class="sl-illus-lv" id="slIllusLv">10</div>
+                <div class="sl-illus-figure" id="slIllusFigure"></div>
+                <div class="sl-illus-name-bg" id="slIllusNameBg"></div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- Redes sociales reales — debajo del Social Link section -->
+        <div class="real-social-bar">
+          <span class="real-social-label">CONTACTO</span>
+          <a class="real-social-link" href="https://github.com/Edward2418" target="_blank">
+            <span class="real-social-icon">GH</span> GitHub
           </a>
-          <a class="social-card" href="https://linkedin.com/" target="_blank">
-            <span class="social-icon">LI</span>
-            <div class="social-info">
-              <span class="social-name">LinkedIn</span>
-              <span class="social-handle">Edward</span>
-            </div>
-            <span class="social-arrow">→</span>
+          <a class="real-social-link" href="https://linkedin.com/" target="_blank">
+            <span class="real-social-icon">LI</span> LinkedIn
           </a>
         </div>
+
       </section>
 
       <!-- ---- SECCIÓN: TIMELINE ---- -->
@@ -510,6 +556,18 @@
       </section>
 
     </main>
+
+  <!-- TEXTO VERTICAL DECORATIVO — lado izquierdo, siempre visible.
+       En P3R hay texto vertical semitransparente grande en el borde izquierdo
+       con el nombre del jugador o "PERSONA". Lo implementamos con writing-mode. -->
+  <div class="vertical-deco-text" aria-hidden="true">
+    <span>EDWARD</span>
+    <span>PORTFOLIO</span>
+  </div>
+
+  <!-- CANVAS DE PARTÍCULAS — fondo animado con partículas flotantes.
+       JS lo inicializa en main.js con requestAnimationFrame. -->
+  <canvas class="particles-canvas" id="particlesCanvas"></canvas>
 
   </div><!-- fin .app-layout -->
 
