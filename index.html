@@ -653,9 +653,30 @@
     <span>PORTFOLIO</span>
   </div>
 
-  <!-- CANVAS DE PARTÍCULAS — fondo animado con partículas flotantes.
-       JS lo inicializa en main.js con requestAnimationFrame. -->
+  <!-- CANVAS DE PARTÍCULAS -->
   <canvas class="particles-canvas" id="particlesCanvas"></canvas>
+
+  <!-- =============================================
+       PERSONAJE DEL MENÚ PRINCIPAL
+       Oguri Cap integrada al layout general,
+       visible en todas las secciones como el
+       protagonista de P3R en el menú principal.
+       Posicionada entre el sidebar y el contenido.
+       ============================================= -->
+  <div class="menu-character" id="menuCharacter">
+    <!-- Halo de luz detrás del personaje -->
+    <div class="char-halo"></div>
+    <!-- La imagen del personaje -->
+    <img
+      src="assets/img/oguri-cap.png"
+      alt="Oguri Cap"
+      class="menu-char-img"
+      id="menuCharImg"
+      draggable="false"
+    />
+    <!-- Reflejo difuso en el suelo — efecto P3R -->
+    <div class="char-ground-glow"></div>
+  </div>
 
   </div><!-- fin .app-layout -->
 

@@ -2534,3 +2534,150 @@ body::after {
     transform: none;
   }
 }
+
+/* ================================================
+   FASE VISUAL 3 — Personaje integrado al menú
+
+   En P3R el protagonista está posicionado a la
+   izquierda del menú, parcialmente superpuesto
+   sobre el fondo y con blend mode para integrarse.
+
+   Aquí posicionamos Oguri Cap entre el sidebar
+   y el área de contenido, con fixed para que
+   sea visible en todas las secciones.
+   ================================================ */
+.menu-character {
+  position: fixed;
+  /* Se posiciona justo al borde derecho del sidebar */
+  left: calc(var(--sidebar-width) - 60px);
+  bottom: 0;
+  /* Ancho generoso para que la figura se vea completa */
+  width: 340px;
+  height: 85vh;
+  z-index: 3; /* encima del fondo, debajo del contenido */
+  pointer-events: none;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+
+  /* La transición de entrada al cargar */
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+/* Una vez que JS agrega .visible, el personaje entra */
+.menu-character.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* La imagen del personaje */
+.menu-char-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: bottom center;
+
+  /* MIX-BLEND-MODE: el secreto de la integración con el fondo.
+     'luminosity' mezcla la luminosidad de la imagen con el color
+     del fondo, haciendo que los tonos del personaje se integren
+     con el azul del gradiente — efecto muy cercano al de P3R.
+     Prueba también: 'screen', 'overlay', 'soft-light' para
+     distintos niveles de integración. */
+  mix-blend-mode: luminosity;
+
+  /* filter encadenado:
+     - brightness(1.15): un poco más brillante para que resalte
+     - contrast(1.05): ligeramente más contraste
+     - drop-shadow: el glow de color que rodea la figura */
+  filter:
+    brightness(1.15)
+    contrast(1.05)
+    drop-shadow(0 0 30px rgba(255, 170, 0, 0.4))
+    drop-shadow(0 0 80px rgba(255, 100, 0, 0.2));
+
+  /* La flotación permanente — igual que en el Social Link */
+  animation: characterFloat 3.5s ease-in-out infinite;
+
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* Halo de luz detrás del personaje
+   Simula el resplandor de fondo que tiene el protagonista
+   de P3R — un círculo de luz suave en su color */
+.char-halo {
+  position: absolute;
+  bottom: 15%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(
+    circle,
+    rgba(255, 150, 0, 0.2) 0%,
+    rgba(255, 100, 0, 0.08) 40%,
+    transparent 70%
+  );
+  border-radius: 50%;
+  /* El halo pulsa suavemente */
+  animation: haloPulse 3.5s ease-in-out infinite;
+  z-index: -1;
+}
+
+@keyframes haloPulse {
+  0%, 100% {
+    transform: translateX(-50%) scale(1);
+    opacity: 0.7;
+  }
+  50% {
+    transform: translateX(-50%) scale(1.2);
+    opacity: 1;
+  }
+}
+
+/* Reflejo/glow en el suelo debajo del personaje
+   Como la sombra de luz que tienen los personajes de P3R */
+.char-ground-glow {
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 160px;
+  height: 30px;
+  background: radial-gradient(
+    ellipse,
+    rgba(255, 150, 0, 0.25) 0%,
+    transparent 70%
+  );
+  border-radius: 50%;
+  filter: blur(8px);
+  animation: haloPulse 3.5s ease-in-out infinite;
+}
+
+/* Cuando la sección activa no es 'about', el personaje
+   se hace semi-transparente para no competir con el contenido */
+.menu-character.dimmed {
+  opacity: 0.25;
+  transition: opacity 0.5s ease;
+}
+
+.menu-character.visible:not(.dimmed) {
+  opacity: 1;
+}
+
+/* En móvil el personaje del menú se oculta — no hay espacio */
+@media (max-width: 768px) {
+  .menu-character { display: none; }
+}
+
+/* En pantallas medianas lo hacemos más pequeño */
+@media (max-width: 1100px) {
+  .menu-character {
+    width: 260px;
+    left: calc(var(--sidebar-width) - 40px);
+  }
+}

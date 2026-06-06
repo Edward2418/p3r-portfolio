@@ -1506,3 +1506,75 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
 }); /* fin parallax */
+
+/* ================================================
+   FASE VISUAL 3 — Personaje en el menú principal
+
+   El personaje aparece al cargar y reacciona
+   a la sección activa:
+   - En ABOUT: visible y brillante (sección "suya")
+   - En el resto: semi-transparente (dimmed)
+   Esto evita que compita visualmente con el contenido.
+   ================================================ */
+document.addEventListener('DOMContentLoaded', () => {
+
+  const menuChar = document.getElementById('menuCharacter');
+  if (!menuChar) return;
+
+  /* Entrada con delay — espera a que el splash termine */
+  setTimeout(() => {
+    menuChar.classList.add('visible');
+  }, 800);
+
+  /* Observamos cambios en la sección activa para
+     hacer dimmed/visible según corresponda */
+  const sections = document.querySelectorAll('.section');
+
+  const sectionObserver = new MutationObserver(() => {
+    const activeSection = document.querySelector('.section.active');
+    if (!activeSection) return;
+
+    const activeId = activeSection.id;
+
+    /* El personaje se ve completamente solo en About y Social Link.
+       En el resto se atenúa para no tapar el contenido. */
+    const fullVisibleSections = ['about', 'social'];
+
+    if (fullVisibleSections.includes(activeId)) {
+      menuChar.classList.remove('dimmed');
+    } else {
+      menuChar.classList.add('dimmed');
+    }
+  });
+
+  sections.forEach(sec => {
+    sectionObserver.observe(sec, { attributes: true });
+  });
+
+  /* También reaccionamos al hover del sidebar —
+     cuando el usuario navega el menú, el personaje
+     hace un leve "tilt" hacia el ítem seleccionado,
+     como en P3R donde el protagonista gira la cabeza */
+  const navItems = document.querySelectorAll('.nav-item');
+  const charImg  = document.getElementById('menuCharImg');
+
+  if (charImg) {
+    navItems.forEach((item, index) => {
+      item.addEventListener('mouseenter', () => {
+        /* El personaje se inclina ligeramente según
+           qué tan arriba o abajo está el ítem en el menú */
+        const totalItems = navItems.length;
+        const normalizedPos = (index / (totalItems - 1)) - 0.5; /* -0.5 a +0.5 */
+        const tiltY = normalizedPos * 6; /* máximo 3deg de inclinación */
+
+        charImg.style.transform = `rotate(${tiltY}deg)`;
+        charImg.style.transition = 'transform 0.3s ease';
+      });
+
+      item.addEventListener('mouseleave', () => {
+        charImg.style.transform = 'rotate(0deg)';
+      });
+    });
+  }
+
+}); /* fin personaje menú */
