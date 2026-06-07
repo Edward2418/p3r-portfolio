@@ -1597,7 +1597,7 @@ document.addEventListener('DOMContentLoaded', () => {
 document.addEventListener('DOMContentLoaded', () => {
 
   /* ---- Configuración ---- */
-  const useSynth = true; /* true = sonidos sintéticos, false = archivos reales */
+  const useSynth = false; /* true = sonidos sintéticos, false = archivos reales */
   let isMuted    = false;
 
   /* ---- Web Audio API para efectos sintéticos ----
@@ -1662,11 +1662,15 @@ document.addEventListener('DOMContentLoaded', () => {
   let sounds = {};
 
   if (!useSynth && typeof Howl !== 'undefined') {
+    /* Howler acepta múltiples formatos — usa el primero que el navegador soporte.
+       MP3 primero (más ligero), WAV como fallback (mayor compatibilidad). */
     sounds = {
-      cursor:  new Howl({ src: ['assets/sounds/cursor.mp3'],  volume: 0.4 }),
-      confirm: new Howl({ src: ['assets/sounds/confirm.mp3'], volume: 0.5 }),
-      cancel:  new Howl({ src: ['assets/sounds/cancel.mp3'],  volume: 0.4 }),
-      open:    new Howl({ src: ['assets/sounds/open.mp3'],    volume: 0.6 })
+      cursor:  new Howl({ src: ['assets/sounds/cursor.mp3'],  volume: 0.35, preload: true }),
+      confirm: new Howl({ src: ['assets/sounds/confirm.mp3'], volume: 0.45, preload: true }),
+      cancel:  new Howl({ src: ['assets/sounds/cancel.mp3'],  volume: 0.40, preload: true }),
+      open:    new Howl({ src: ['assets/sounds/open.mp3'],    volume: 0.55, preload: true }),
+      close:   new Howl({ src: ['assets/sounds/close.mp3'],   volume: 0.40, preload: true }),
+      levelup: new Howl({ src: ['assets/sounds/levelup.mp3'], volume: 0.50, preload: true })
     };
   }
 
@@ -1692,6 +1696,23 @@ document.addEventListener('DOMContentLoaded', () => {
     btn.addEventListener('click', () => playSound('confirm'));
   });
 
+  /* Sonido de close al cerrar modal */
+  document.querySelectorAll('.modal-backdrop').forEach(el => {
+    el.addEventListener('click', () => playSound('close'));
+  });
+
+  /* Sonido de levelup cuando se animan las barras de About */
+  const aboutSec = document.getElementById('about');
+  if (aboutSec) {
+    const aboutAudioObserver = new MutationObserver(() => {
+      if (aboutSec.classList.contains('active')) {
+        setTimeout(() => playSound('levelup'), 400);
+        aboutAudioObserver.disconnect(); /* solo una vez por sesión */
+      }
+    });
+    aboutAudioObserver.observe(aboutSec, { attributes: true });
+  }
+
   const modalClose = document.getElementById('modalClose');
   if (modalClose) {
     modalClose.addEventListener('click', () => playSound('cancel'));
@@ -1708,6 +1729,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (splash) {
     const splashObserver = new MutationObserver(() => {
       if (splash.classList.contains('hidden')) {
+        /* camp_open.wav — el sonido de abrir el menú de P3R */
         setTimeout(() => playSound('open'), 100);
         splashObserver.disconnect();
       }
