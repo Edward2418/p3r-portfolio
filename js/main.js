@@ -174,22 +174,49 @@ document.addEventListener('DOMContentLoaded', () => {
      5. ACCIONES ESPECIALES POR SECCIÓN
      ================================================ */
   function handleSectionEntry(sectionName) {
-    /* Reseteamos skill bars siempre que salimos de skills */
+    /* Sistema unificado de barras — maneja tanto las viejas (.skill-bar)
+       como las nuevas (.skill-entry-bar) y las de About (.about-bar-fill, .about-attr-bar) */
+
+    /* Resetear todas las barras al salir de su sección */
     if (sectionName !== 'skills') {
-      skillBars.forEach(bar => { bar.style.width = '0'; });
+      document.querySelectorAll('.skill-bar, .skill-entry-bar').forEach(b => {
+        b.style.width = '0';
+      });
+    }
+    if (sectionName !== 'about') {
+      document.querySelectorAll('.about-bar-fill, .about-attr-bar, .next-exp-fill').forEach(b => {
+        b.style.width = '0';
+      });
     }
 
     if (sectionName === 'skills') {
-      /* Pequeño delay para que la transición de entrada
-         de la sección termine antes de animar las barras */
       setTimeout(() => {
-        skillBars.forEach(bar => {
-          const fillValue = getComputedStyle(bar)
-            .getPropertyValue('--skill-fill')
-            .trim();
-          bar.style.width = fillValue;
+        /* Barras nuevas: .skill-entry-bar con variable --fill */
+        document.querySelectorAll('.skill-entry-bar').forEach(bar => {
+          const fill = getComputedStyle(bar).getPropertyValue('--fill').trim();
+          if (fill) bar.style.width = fill;
         });
-      }, 200);
+        /* Barras legacy por si acaso */
+        document.querySelectorAll('.skill-bar').forEach(bar => {
+          const fill = getComputedStyle(bar).getPropertyValue('--skill-fill').trim();
+          if (fill) bar.style.width = fill;
+        });
+      }, 220);
+    }
+
+    if (sectionName === 'about') {
+      setTimeout(() => {
+        document.querySelectorAll('.about-bar-fill').forEach(bar => {
+          const fill = getComputedStyle(bar).getPropertyValue('--fill').trim();
+          if (fill) bar.style.width = fill;
+        });
+        document.querySelectorAll('.about-attr-bar').forEach(bar => {
+          const fill = getComputedStyle(bar).getPropertyValue('--attr-fill').trim();
+          if (fill) bar.style.width = fill;
+        });
+        const nextExp = document.querySelector('.next-exp-fill');
+        if (nextExp) nextExp.style.width = '50%';
+      }, 280);
     }
   }
 

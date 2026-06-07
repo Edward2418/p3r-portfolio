@@ -422,96 +422,124 @@
 
       <!-- ---- SECCIÓN: PROJECTS ---- -->
       <section class="section" id="projects">
+
+        <!-- Número decorativo al fondo -->
+        <div class="projects-lv-bg" aria-hidden="true">PJ</div>
+
         <div class="section-header">
           <h1 class="section-title">PROYECTOS</h1>
           <div class="section-line"></div>
         </div>
 
-        <!-- FILTROS: botones que filtran las cards por tecnología.
-             data-filter="all" muestra todas.
-             data-filter="java" muestra solo las que tienen java en data-tags. -->
+        <!-- Filtros rediseñados al estilo P3R -->
         <div class="filter-bar">
-          <button class="filter-btn active" data-filter="all">TODOS</button>
+          <button class="filter-btn active" data-filter="all">◆ TODOS</button>
           <button class="filter-btn" data-filter="java">Java</button>
           <button class="filter-btn" data-filter="sql">SQL</button>
-          <button class="filter-btn" data-filter="html">HTML/CSS/JS</button>
+          <button class="filter-btn" data-filter="html">Web</button>
           <button class="filter-btn" data-filter="kotlin">Kotlin</button>
         </div>
 
-        <!-- GRID DE CARDS
-             Cada card tiene:
-             - data-tags: lista de tecnologías en minúsculas para el filtrado
-             - data-id: identificador único para el modal
-             El área .card-image es donde va el efecto duotono -->
         <div class="projects-grid" id="projectsGrid">
 
-          <!-- CARD 1 -->
+          <!-- CARD 1 — Sistema de Gestión DB -->
           <div class="project-card" data-tags="java sql" data-id="1">
-            <div class="card-image" style="--duo-color: #ff6600;">
+            <!-- Área superior: duotono + número de nivel grande -->
+            <div class="card-image" style="--duo-color:#ff6600;">
               <div class="card-image-overlay"></div>
+              <!-- Número grande al fondo de la imagen — como en P3R -->
+              <div class="card-lv-num">03</div>
+              <!-- Badge compacto en esquina -->
               <div class="card-lv-badge">Lv 03</div>
+              <!-- Tipo de proyecto -->
+              <div class="card-type-badge">DESKTOP APP</div>
             </div>
             <div class="card-body">
+              <!-- Dot de color del stack principal -->
+              <div class="card-stack-dot" style="--dot:#ff6600"></div>
               <h3 class="project-name">Sistema de Gestión DB</h3>
-              <p class="project-desc">Aplicación de escritorio para administración de bases de datos con operaciones CRUD completas.</p>
+              <p class="project-desc">App de escritorio con operaciones CRUD completas sobre bases de datos relacionales.</p>
               <div class="project-tags">
                 <span class="tag small">Java</span>
                 <span class="tag small">SQL</span>
+                <span class="tag small">JDBC</span>
               </div>
             </div>
-            <!-- El botón de ver detalle — abre el modal -->
-            <button class="card-detail-btn" data-id="1">VER DETALLE →</button>
+            <button class="card-detail-btn" data-id="1">
+              <span>VER DETALLE</span>
+              <span class="btn-arrow">→</span>
+            </button>
           </div>
 
-          <!-- CARD 2 -->
+          <!-- CARD 2 — App Móvil -->
           <div class="project-card" data-tags="html kotlin" data-id="2">
-            <div class="card-image" style="--duo-color: #0055ff;">
+            <div class="card-image" style="--duo-color:#3b5bdb;">
               <div class="card-image-overlay"></div>
+              <div class="card-lv-num">04</div>
               <div class="card-lv-badge">Lv 04</div>
+              <div class="card-type-badge">MOBILE APP</div>
             </div>
             <div class="card-body">
+              <div class="card-stack-dot" style="--dot:#3b5bdb"></div>
               <h3 class="project-name">App Móvil de Tareas</h3>
-              <p class="project-desc">Aplicación Android para gestión de tareas personales con notificaciones y sincronización local.</p>
+              <p class="project-desc">Aplicación Android con notificaciones locales y almacenamiento en SQLite.</p>
               <div class="project-tags">
                 <span class="tag small">Kotlin</span>
                 <span class="tag small">Android</span>
+                <span class="tag small">SQLite</span>
               </div>
             </div>
-            <button class="card-detail-btn" data-id="2">VER DETALLE →</button>
+            <button class="card-detail-btn" data-id="2">
+              <span>VER DETALLE</span>
+              <span class="btn-arrow">→</span>
+            </button>
           </div>
 
-          <!-- CARD 3 -->
+          <!-- CARD 3 — Portafolio Web -->
           <div class="project-card" data-tags="html java" data-id="3">
-            <div class="card-image" style="--duo-color: #aa00ff;">
+            <div class="card-image" style="--duo-color:#7c3aed;">
               <div class="card-image-overlay"></div>
+              <div class="card-lv-num">05</div>
               <div class="card-lv-badge">Lv 05</div>
+              <div class="card-type-badge">WEB</div>
             </div>
             <div class="card-body">
+              <div class="card-stack-dot" style="--dot:#7c3aed"></div>
               <h3 class="project-name">Portafolio Web</h3>
-              <p class="project-desc">Este mismo portafolio — construido con HTML, CSS y JS puro con estética de Persona 3 Reload.</p>
+              <p class="project-desc">Este portafolio — HTML/CSS/JS puro con estética de Persona 3 Reload.</p>
               <div class="project-tags">
                 <span class="tag small">HTML/CSS</span>
                 <span class="tag small">JavaScript</span>
               </div>
             </div>
-            <button class="card-detail-btn" data-id="3">VER DETALLE →</button>
+            <button class="card-detail-btn" data-id="3">
+              <span>VER DETALLE</span>
+              <span class="btn-arrow">→</span>
+            </button>
           </div>
 
-          <!-- CARD 4 -->
+          <!-- CARD 4 — Sistema de Reportes -->
           <div class="project-card" data-tags="sql java" data-id="4">
-            <div class="card-image" style="--duo-color: #00aa55;">
+            <div class="card-image" style="--duo-color:#059669;">
               <div class="card-image-overlay"></div>
+              <div class="card-lv-num">02</div>
               <div class="card-lv-badge">Lv 02</div>
+              <div class="card-type-badge">HERRAMIENTA</div>
             </div>
             <div class="card-body">
+              <div class="card-stack-dot" style="--dot:#059669"></div>
               <h3 class="project-name">Sistema de Reportes</h3>
-              <p class="project-desc">Generador de reportes estadísticos con exportación a PDF desde una base de datos relacional.</p>
+              <p class="project-desc">Generador de reportes estadísticos con exportación a PDF desde base de datos.</p>
               <div class="project-tags">
                 <span class="tag small">SQL</span>
                 <span class="tag small">Java</span>
+                <span class="tag small">PDF</span>
               </div>
             </div>
-            <button class="card-detail-btn" data-id="4">VER DETALLE →</button>
+            <button class="card-detail-btn" data-id="4">
+              <span>VER DETALLE</span>
+              <span class="btn-arrow">→</span>
+            </button>
           </div>
 
         </div><!-- fin projects-grid -->
