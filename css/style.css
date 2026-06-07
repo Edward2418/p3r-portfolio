@@ -2928,3 +2928,341 @@ body::after {
 .menu-character.visible:not(.dimmed) {
   opacity: 0.85; /* no 100% para que el sidebar se vea encima */
 }
+
+/* ================================================
+   FASE VISUAL 5 — Sección About estilo P3R
+   Referencia: pantalla de stats de personaje (imagen 2)
+   ================================================ */
+
+/* Número gigante decorativo al fondo — como el "34" de Yukari */
+.about-lv-bg {
+  position: absolute;
+  top: 50%;
+  right: 2rem;
+  transform: translateY(-50%);
+  font-family: var(--font-title);
+  font-size: clamp(8rem, 20vw, 16rem);
+  line-height: 1;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(0, 204, 255, 0.07);
+  user-select: none;
+  pointer-events: none;
+  z-index: 0;
+  letter-spacing: -0.05em;
+}
+
+/* Layout principal — dos columnas */
+.about-stats-layout {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 2.5rem;
+  align-items: start;
+  position: relative;
+  z-index: 1;
+  height: calc(100vh - 180px);
+  overflow: hidden;
+}
+
+/* ---- COLUMNA IZQUIERDA ---- */
+.about-left-col {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* Avatar con nivel flotante */
+.about-avatar-wrap {
+  position: relative;
+  align-self: flex-start;
+}
+
+.about-avatar-wrap .avatar-large-placeholder {
+  width: 140px;
+  height: 175px;
+}
+
+/* Etiqueta PLV sobre el avatar — como "PLV 34" en la pantalla de Yukari */
+.about-plv {
+  position: absolute;
+  top: 8px;
+  right: -8px;
+  background: var(--bg-dark);
+  border: 1px solid var(--cyan);
+  padding: 2px 8px;
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.about-plv-label {
+  font-family: var(--font-body);
+  font-size: 0.6rem;
+  color: var(--white-dim);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+.about-plv-num {
+  font-family: var(--font-title);
+  font-size: 1.1rem;
+  color: var(--cyan);
+  line-height: 1;
+}
+
+/* Barras HP/SP estilo pantalla de personaje */
+.about-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.about-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.about-bar-label {
+  font-family: var(--font-title);
+  font-size: 0.8rem;
+  color: #22cc88;
+  min-width: 20px;
+  letter-spacing: 0.05em;
+}
+
+.about-bar-label.sp { color: #ffcc22; }
+
+.about-bar-track {
+  flex: 1;
+  height: 7px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.about-bar-fill {
+  height: 100%;
+  width: 0; /* empieza en 0, JS la anima */
+  border-radius: 3px;
+  transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hp-fill {
+  background: linear-gradient(90deg, #1a9960, #22cc88);
+  box-shadow: 0 0 8px rgba(34, 204, 136, 0.5);
+}
+
+.sp-fill {
+  background: linear-gradient(90deg, #cc9900, #ffcc22);
+  box-shadow: 0 0 8px rgba(255, 204, 34, 0.5);
+}
+
+.about-bar-val {
+  font-family: var(--font-title);
+  font-size: 0.95rem;
+  color: #22cc88;
+  min-width: 60px;
+  text-align: right;
+  line-height: 1;
+}
+
+.about-bar-val.sp { color: #ffcc22; }
+
+.about-bar-max {
+  font-family: var(--font-body);
+  font-size: 0.6rem;
+  color: var(--white-dim);
+  font-weight: 500;
+}
+
+/* Tabla de atributos STR/MAG/END/AGI/LCK */
+.about-attrs {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--white-ghost);
+}
+
+.about-attr-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.about-attr-name {
+  font-family: var(--font-title);
+  font-size: 0.72rem;
+  color: var(--cyan-dim);
+  min-width: 28px;
+  letter-spacing: 0.08em;
+}
+
+.about-attr-skill {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  color: var(--white-dim);
+  min-width: 72px;
+  font-weight: 500;
+}
+
+.about-attr-bar-wrap {
+  flex: 1;
+  height: 4px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.about-attr-bar {
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, var(--cyan-dim), var(--cyan));
+  border-radius: 2px;
+  transition: width 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Delays escalonados para cada barra — efecto cascada */
+.about-attr-row:nth-child(1) .about-attr-bar { transition-delay: 0.1s; }
+.about-attr-row:nth-child(2) .about-attr-bar { transition-delay: 0.2s; }
+.about-attr-row:nth-child(3) .about-attr-bar { transition-delay: 0.3s; }
+.about-attr-row:nth-child(4) .about-attr-bar { transition-delay: 0.4s; }
+.about-attr-row:nth-child(5) .about-attr-bar { transition-delay: 0.5s; }
+
+.about-attr-num {
+  font-family: var(--font-title);
+  font-size: 0.9rem;
+  color: var(--white);
+  min-width: 24px;
+  text-align: right;
+}
+
+/* ---- COLUMNA DERECHA ---- */
+.about-right-col {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  padding-top: 0.5rem;
+}
+
+.about-identity {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.about-name {
+  font-family: var(--font-title);
+  font-size: 2rem;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  color: var(--white);
+}
+
+.about-role {
+  font-size: 0.95rem;
+  color: var(--cyan);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.about-institute {
+  font-size: 0.78rem;
+  color: var(--white-dim);
+  letter-spacing: 0.04em;
+}
+
+/* Divisor estilo P3R */
+.about-divider {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    var(--red-accent) 0%,
+    var(--cyan) 40%,
+    transparent 100%
+  );
+}
+
+.about-bio {
+  font-size: 0.9rem;
+  color: var(--white-dim);
+  line-height: 1.8;
+  max-width: 480px;
+}
+
+.about-bio strong {
+  color: var(--white);
+  font-weight: 600;
+}
+
+/* NEXT EXP — elemento único del portafolio */
+.about-next-exp {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 0.8rem 1rem;
+  background: rgba(0,0,0,0.25);
+  border: 1px solid rgba(0,204,255,0.12);
+  border-radius: 3px;
+  max-width: 400px;
+}
+
+.next-exp-label {
+  font-family: var(--font-title);
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  color: var(--cyan-dim);
+}
+
+.next-exp-track {
+  height: 5px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.next-exp-fill {
+  height: 100%;
+  /* 4 de 8 semestres completados = 50% */
+  width: 0;
+  background: linear-gradient(90deg, var(--red-accent), #ff6644);
+  border-radius: 3px;
+  box-shadow: 0 0 8px rgba(255, 34, 68, 0.5);
+  transition: width 1.4s 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.next-exp-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.next-exp-val {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  color: var(--white-dim);
+  font-weight: 500;
+}
+
+.next-exp-goal {
+  font-family: var(--font-title);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  color: var(--red-accent);
+}
+
+/* Responsive — en móvil vuelve a una columna */
+@media (max-width: 768px) {
+  .about-stats-layout {
+    grid-template-columns: 1fr;
+    height: auto;
+    overflow-y: auto;
+    gap: 1.5rem;
+  }
+  .about-lv-bg { display: none; }
+  .about-left-col {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+}

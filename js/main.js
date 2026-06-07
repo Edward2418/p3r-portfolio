@@ -1743,3 +1743,68 @@ document.addEventListener('DOMContentLoaded', () => {
      Si tienes ambos formatos, el navegador elige el compatible. */
 
 }); /* fin audio */
+
+/* ================================================
+   FASE VISUAL 5 — Animación de barras en About
+
+   Las barras de HP/SP y de atributos arrancan en 0
+   y se animan al entrar a la sección About.
+   Usamos el mismo MutationObserver que en Skills.
+   ================================================ */
+document.addEventListener('DOMContentLoaded', () => {
+
+  const aboutSection = document.getElementById('about');
+  if (!aboutSection) return;
+
+  /* Todas las barras de la sección About */
+  const hpFill    = aboutSection.querySelector('.hp-fill');
+  const spFill    = aboutSection.querySelector('.sp-fill');
+  const attrBars  = aboutSection.querySelectorAll('.about-attr-bar');
+  const nextExp   = aboutSection.querySelector('.next-exp-fill');
+
+  function animateAboutBars() {
+    /* HP y SP */
+    if (hpFill) hpFill.style.width = hpFill.parentElement
+      .previousElementSibling?.style.getPropertyValue('--fill') || '85%';
+
+    /* Leemos --fill del style inline del elemento padre (.about-bar-track)
+       en realidad el --fill está en el .about-bar-fill directamente */
+    aboutSection.querySelectorAll('.about-bar-fill').forEach(bar => {
+      const fill = getComputedStyle(bar).getPropertyValue('--fill').trim();
+      if (fill) bar.style.width = fill;
+    });
+
+    /* Atributos con delay escalonado (ya definido en CSS) */
+    attrBars.forEach(bar => {
+      const fill = getComputedStyle(bar).getPropertyValue('--attr-fill').trim();
+      if (fill) bar.style.width = fill;
+    });
+
+    /* Next EXP — 4 de 8 semestres = 50% */
+    if (nextExp) nextExp.style.width = '50%';
+  }
+
+  function resetAboutBars() {
+    aboutSection.querySelectorAll('.about-bar-fill').forEach(b => b.style.width = '0');
+    attrBars.forEach(b => b.style.width = '0');
+    if (nextExp) nextExp.style.width = '0';
+  }
+
+  /* Observamos cuándo la sección About se activa */
+  const aboutObserver = new MutationObserver(() => {
+    if (aboutSection.classList.contains('active')) {
+      /* Pequeño delay para que la transición de entrada termine */
+      setTimeout(animateAboutBars, 250);
+    } else {
+      resetAboutBars();
+    }
+  });
+
+  aboutObserver.observe(aboutSection, { attributes: true });
+
+  /* Si About ya es la sección activa al cargar, animamos inmediatamente */
+  if (aboutSection.classList.contains('active')) {
+    setTimeout(animateAboutBars, 600);
+  }
+
+}); /* fin About bars */

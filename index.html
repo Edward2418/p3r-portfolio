@@ -278,31 +278,146 @@
 
       <!-- ---- SECCIÓN: ABOUT ---- -->
       <section class="section active" id="about">
+
+        <!-- NÚMERO GIGANTE AL FONDO — como el "34" de Yukari en P3R.
+             Totalmente decorativo, muy baja opacidad, da profundidad. -->
+        <div class="about-lv-bg" aria-hidden="true">06</div>
+
         <div class="section-header">
-          <h1 class="section-title">Sobre mí...</h1>
+          <h1 class="section-title">Sobre mí</h1>
           <div class="section-line"></div>
         </div>
-        <div class="about-content">
-          <div class="about-avatar-large">
-            <div class="avatar-large-placeholder">ED</div>
-          </div>
-          <div class="about-text">
-            <h2 class="about-name">Edward Negrete Bustos</h2>
-            <p class="about-role">Estudiante de Ingeniería en Sistemas Computacionales</p>
-            <p class="about-institute">TecNM | Instituto Tecnológico Superior de Huauchinango</p>
+
+        <!-- LAYOUT DE STATS — dos columnas como la pantalla de personaje de P3R:
+             Izquierda: avatar + datos básicos + barras de atributos
+             Derecha:   bio, instituto, tags, next exp -->
+        <div class="about-stats-layout">
+
+          <!-- COLUMNA IZQUIERDA -->
+          <div class="about-left-col">
+
+            <!-- Avatar con clip diagonal -->
+            <div class="about-avatar-wrap">
+              <div class="avatar-large-placeholder">ED</div>
+              <!-- El tag de nivel sobre el avatar -->
+              <div class="about-plv">
+                <span class="about-plv-label">PLV</span>
+                <span class="about-plv-num">06</span>
+              </div>
+            </div>
+
+            <!-- Barras HP / SP estilo pantalla de personaje -->
+            <div class="about-bars">
+              <div class="about-bar-row">
+                <span class="about-bar-label">HP</span>
+                <div class="about-bar-track">
+                  <div class="about-bar-fill hp-fill" style="--fill:85%"></div>
+                </div>
+                <span class="about-bar-val">425<span class="about-bar-max">/500</span></span>
+              </div>
+              <div class="about-bar-row">
+                <span class="about-bar-label sp">SP</span>
+                <div class="about-bar-track">
+                  <div class="about-bar-fill sp-fill" style="--fill:60%"></div>
+                </div>
+                <span class="about-bar-val sp">182<span class="about-bar-max">/300</span></span>
+              </div>
+            </div>
+
+            <!-- Atributos numéricos — estilo STR/MAG/END de P3R
+                 Pero mapeados a tus habilidades reales -->
+            <div class="about-attrs">
+              <div class="about-attr-row">
+                <span class="about-attr-name">STR</span>
+                <span class="about-attr-skill">Java</span>
+                <div class="about-attr-bar-wrap">
+                  <div class="about-attr-bar" style="--attr-fill:70%"></div>
+                </div>
+                <span class="about-attr-num">70</span>
+              </div>
+              <div class="about-attr-row">
+                <span class="about-attr-name">MAG</span>
+                <span class="about-attr-skill">SQL</span>
+                <div class="about-attr-bar-wrap">
+                  <div class="about-attr-bar" style="--attr-fill:65%"></div>
+                </div>
+                <span class="about-attr-num">65</span>
+              </div>
+              <div class="about-attr-row">
+                <span class="about-attr-name">END</span>
+                <span class="about-attr-skill">HTML/CSS/JS</span>
+                <div class="about-attr-bar-wrap">
+                  <div class="about-attr-bar" style="--attr-fill:75%"></div>
+                </div>
+                <span class="about-attr-num">75</span>
+              </div>
+              <div class="about-attr-row">
+                <span class="about-attr-name">AGI</span>
+                <span class="about-attr-skill">Kotlin</span>
+                <div class="about-attr-bar-wrap">
+                  <div class="about-attr-bar" style="--attr-fill:55%"></div>
+                </div>
+                <span class="about-attr-num">55</span>
+              </div>
+              <div class="about-attr-row">
+                <span class="about-attr-name">LCK</span>
+                <span class="about-attr-skill">Linux</span>
+                <div class="about-attr-bar-wrap">
+                  <div class="about-attr-bar" style="--attr-fill:60%"></div>
+                </div>
+                <span class="about-attr-num">60</span>
+              </div>
+            </div>
+
+          </div><!-- fin columna izquierda -->
+
+          <!-- COLUMNA DERECHA -->
+          <div class="about-right-col">
+
+            <!-- Nombre y datos principales -->
+            <div class="about-identity">
+              <h2 class="about-name">Edward Negrete Bustos</h2>
+              <p class="about-role">Ingeniería en Sistemas Computacionales</p>
+              <p class="about-institute">TecNM · ITSH · Huauchinango, Pue.</p>
+            </div>
+
+            <!-- Línea divisora estilo P3R -->
+            <div class="about-divider"></div>
+
+            <!-- Bio -->
             <p class="about-bio">
-              Estudiante de 6to Semestre, con especialidad "ARQUITECTURA FULL-STACK Y VIDEOJUEGOS".
-              Apasionado de los videojuegos y el anime, construyendo proyectos reales
-              mientras aprendo las tecnologías que mueven la industria.
+              Estudiante de 6to semestre con especialidad en
+              <strong>Full-Stack y Videojuegos</strong>.
+              Apasionado del anime, los JRPGs y la construcción
+              de proyectos reales mientras aprendo las tecnologías
+              que mueven la industria.
             </p>
+
+            <!-- NEXT EXP — elemento creativo único, muy P3R -->
+            <div class="about-next-exp">
+              <div class="next-exp-label">NEXT EXP</div>
+              <div class="next-exp-track">
+                <div class="next-exp-fill"></div>
+              </div>
+              <div class="next-exp-info">
+                <span class="next-exp-val">4 semestres completados</span>
+                <span class="next-exp-goal">Meta: Titulación 2027</span>
+              </div>
+            </div>
+
+            <!-- Tags de tecnologías -->
             <div class="about-tags">
               <span class="tag">Java</span>
               <span class="tag">SQL</span>
               <span class="tag">HTML/CSS/JS</span>
               <span class="tag">Kotlin</span>
+              <span class="tag">Linux</span>
+              <span class="tag">Git</span>
             </div>
-          </div>
-        </div>
+
+          </div><!-- fin columna derecha -->
+
+        </div><!-- fin about-stats-layout -->
       </section>
 
       <!-- ---- SECCIÓN: PROJECTS ---- -->
