@@ -151,6 +151,8 @@ body {
   border-right: 1px solid rgba(0, 204, 255, 0.15);
   position: relative;
   z-index: 10;
+  /* overflow visible para que el texto rotado no se corte */
+  overflow: visible;
 }
 
 /* Línea diagonal decorativa en el borde del sidebar — sello de P3R */
@@ -369,7 +371,8 @@ body {
    - Capa 5:   grande y muy difusa (el bloom exterior)
    Este apilamiento simula el efecto bloom de los shaders del juego. */
 .nav-item.active .nav-label {
-  font-size: 1.9rem;
+  /* Reducimos ligeramente para que quepa en el sidebar con el ángulo */
+  font-size: 1.6rem;
   color: var(--white);
   text-shadow:
     0  0  4px rgba(255, 255, 255, 0.9),
@@ -377,6 +380,9 @@ body {
     0  0 16px rgba(0, 204, 255, 0.6),
     0  0 32px rgba(0, 204, 255, 0.35),
     0  0 64px rgba(0, 204, 255, 0.15);
+  /* Aseguramos que no se corte */
+  white-space: nowrap;
+  overflow: visible;
 }
 
 .nav-item.active .nav-arrow {
@@ -2548,15 +2554,17 @@ body::after {
    ================================================ */
 .menu-character {
   position: fixed;
-  /* Centrado entre el sidebar y el área de contenido.
-     left negativo respecto al sidebar para que la figura
-     quede mitad en el sidebar y mitad en el contenido,
-     igual que en P3R donde el protagonista solapa el menú */
-  left: calc(var(--sidebar-width) - 100px);
+  /* En P3R el personaje está completamente en el borde izquierdo,
+     casi saliendo del marco. Aquí lo posicionamos dentro del sidebar,
+     desplazado a la izquierda para NO tapar el menú.
+     El sidebar tiene --sidebar-width: 300px, así que left:0
+     y un ancho menor al sidebar lo mantiene dentro. */
+  left: -30px;
   bottom: 0;
-  width: 480px;        /* más ancho para que la figura sea grande */
-  height: 92vh;        /* casi toda la altura de la ventana */
-  z-index: 3;
+  width: 340px;
+  height: 88vh;
+  /* z-index: 2 — debajo del texto del menú (z-index:10) */
+  z-index: 2;
   pointer-events: none;
 
   display: flex;
@@ -2662,7 +2670,8 @@ body::after {
 /* Cuando la sección activa no es 'about', el personaje
    se hace semi-transparente para no competir con el contenido */
 .menu-character.dimmed {
-  opacity: 0.25;
+  /* Más transparente cuando no es About — el menú debe leerse claramente */
+  opacity: 0.08;
   transition: opacity 0.5s ease;
 }
 
@@ -2861,4 +2870,61 @@ body::after {
 .mute-btn.muted {
   color: rgba(255,255,255,0.2);
   border-color: rgba(255,255,255,0.1);
+}
+
+/* ================================================
+   CORRECCIONES VISUALES — iteración sobre capturas
+   ================================================ */
+
+/* El nav-list necesita overflow visible para el texto rotado */
+.main-nav {
+  overflow: visible;
+  overflow-y: auto;
+}
+
+.nav-list {
+  overflow: visible;
+}
+
+/* Cada nav-item necesita espacio para el label rotado */
+.nav-item {
+  overflow: visible !important;
+}
+
+/* El label rotado no debe cortarse nunca */
+.nav-label {
+  overflow: visible;
+  white-space: nowrap;
+}
+
+/* El sidebar header y footer sí mantienen overflow hidden
+   para que el fondo del glass no se desborde */
+.sidebar-header,
+.sidebar-footer,
+.stat-bars,
+.attr-block {
+  overflow: hidden;
+}
+
+/* Ajuste del ancho del sidebar — más ancho para el texto inclinado */
+:root {
+  --sidebar-width: 320px;
+}
+
+/* Cuando el personaje está visible (no dimmed), 
+   garantizamos que el menú tenga prioridad visual */
+.sidebar {
+  z-index: 10;
+}
+
+/* El personaje va detrás del sidebar en z-index
+   para que los textos del menú sean siempre legibles */
+.menu-character {
+  z-index: 2 !important;
+}
+
+/* En la sección About, el personaje sube ligeramente su opacidad
+   pero nunca tapa los textos del menú */
+.menu-character.visible:not(.dimmed) {
+  opacity: 0.85; /* no 100% para que el sidebar se vea encima */
 }
