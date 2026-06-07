@@ -1830,3 +1830,37 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
 }); /* fin About bars */
+
+/* ================================================
+   FASE VISUAL 7 — Animación de barras de Skills
+   Nuevo sistema compatible con .skill-entry-bar
+   ================================================ */
+document.addEventListener('DOMContentLoaded', () => {
+
+  const skillsSection = document.getElementById('skills');
+  if (!skillsSection) return;
+
+  const entryBars = skillsSection.querySelectorAll('.skill-entry-bar');
+
+  function animateSkillBars() {
+    entryBars.forEach(bar => {
+      const fill = getComputedStyle(bar).getPropertyValue('--fill').trim();
+      if (fill) bar.style.width = fill;
+    });
+  }
+
+  function resetSkillBars() {
+    entryBars.forEach(bar => { bar.style.width = '0'; });
+  }
+
+  const skillsObserver = new MutationObserver(() => {
+    if (skillsSection.classList.contains('active')) {
+      setTimeout(animateSkillBars, 200);
+    } else {
+      resetSkillBars();
+    }
+  });
+
+  skillsObserver.observe(skillsSection, { attributes: true });
+
+}); /* fin Skills V7 */
