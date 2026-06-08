@@ -423,6 +423,14 @@ document.addEventListener('DOMContentLoaded', () => {
     modalType.textContent    = project.type;
     modalLink.href           = project.github;
 
+    /* Badge de estado con color dinámico */
+    modalStatus.className = '';
+    if (project.status === 'Completado') {
+      modalStatus.classList.add('status-done');
+    } else {
+      modalStatus.classList.add('status-wip');
+    }
+
     /* Actualizamos el color de la imagen del modal */
     modalImage.style.background = `
       repeating-linear-gradient(

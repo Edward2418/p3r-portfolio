@@ -2390,17 +2390,28 @@ kbd {
    ================================================ */
 .vertical-deco-text {
   position: fixed;
-  left: var(--sidebar-width);  /* pegado al borde derecho del sidebar */
+  /* Pegado al borde izquierdo del content-area, no al sidebar.
+     Lo movemos a la derecha del layout para que no tape el contenido.
+     Con right:0 y un ancho pequeño, vive en el margen derecho. */
+  right: 0;
   top: 0;
   bottom: 0;
+  width: 60px;          /* franja muy estrecha — puramente decorativa */
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 1.5rem;
-  padding: 2rem 0.8rem;
-  z-index: 1;                 /* detrás del contenido, encima del fondo */
-  pointer-events: none;       /* no interfiere con clics */
+  justify-content: center;
+  gap: 0.8rem;
+  padding: 2rem 0;
+  z-index: 1;
+  pointer-events: none;
   overflow: hidden;
+  /* Gradiente para que se funda con el borde derecho */
+  mask-image: linear-gradient(
+    to left,
+    rgba(0,0,0,0.4) 0%,
+    transparent 100%
+  );
 }
 
 .vertical-deco-text span {
@@ -2408,26 +2419,23 @@ kbd {
   font-weight: 900;
   font-style: italic;
   font-variation-settings: "wdth" 75;
-  font-size: clamp(4rem, 9vw, 8rem);
-  letter-spacing: 0.15em;
+  /* Más pequeño — es solo decorativo en el borde */
+  font-size: clamp(1.8rem, 3vw, 3rem);
+  letter-spacing: 0.2em;
   line-height: 1;
 
-  /* writing-mode: vertical-rl hace que el texto fluya de arriba a abajo */
   writing-mode: vertical-rl;
   text-orientation: mixed;
 
   color: transparent;
-  /* -webkit-text-stroke dibuja solo el contorno del texto.
-     Opacidad baja = decorativo sin competir con el contenido. */
-  -webkit-text-stroke: 1px rgba(0, 204, 255, 0.12);
-
+  /* Más sutil — opacidad aún más baja */
+  -webkit-text-stroke: 1px rgba(0, 204, 255, 0.08);
   user-select: none;
 }
 
 .vertical-deco-text span:nth-child(2) {
-  /* El segundo texto va más atrás visualmente */
-  -webkit-text-stroke: 1px rgba(0, 204, 255, 0.07);
-  font-size: clamp(2.5rem, 6vw, 5rem);
+  -webkit-text-stroke: 1px rgba(0, 204, 255, 0.04);
+  font-size: clamp(1.2rem, 2vw, 2rem);
 }
 
 /* ================================================
@@ -3770,4 +3778,287 @@ body::after {
 
 @media (max-width: 480px) {
   .projects-grid { grid-template-columns: 1fr; }
+}
+
+/* ================================================
+   FASE VISUAL 9 — Modal de proyectos refinado
+
+   Referencia: pantalla de detalle de Persona en P3R
+   (imagen 3 que se subió al inicio del proyecto —
+   Yukari con stats a la izquierda, personaje a la derecha)
+
+   Cambios respecto al modal anterior:
+   - La columna de imagen tiene un sweep de entrada
+   - El título usa la fuente del menú con ángulo
+   - Las stats del proyecto en formato tabla P3R
+   - Líneas decorativas divisoras con gradiente
+   - Badge de estado con color según el estado
+   ================================================ */
+
+/* Fondo del modal — más oscuro y con blur más pronunciado */
+.modal-backdrop {
+  background: rgba(0, 3, 10, 0.88);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* Panel principal rediseñado */
+.modal-panel {
+  background: linear-gradient(
+    135deg,
+    #000d1a 0%,
+    #001025 60%,
+    #001533 100%
+  );
+  border: 1px solid rgba(0, 204, 255, 0.25);
+  /* Borde superior de acento — como las pantallas de P3R */
+  border-top: 2px solid var(--red-accent);
+  box-shadow:
+    0 0 60px rgba(0, 0, 0, 0.8),
+    0 0 30px rgba(0, 204, 255, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.03);
+}
+
+/* Columna izquierda: imagen con entrada animada */
+.modal-image-col {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Sweep de color que entra al abrir el modal */
+.modal-image-col::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    160deg,
+    var(--cyan) 0%,
+    var(--red-accent) 100%
+  );
+  opacity: 0.06;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* La imagen del modal con mejor transición */
+.modal-image {
+  transition: background 0.5s ease;
+}
+
+/* Línea de acento vertical entre las dos columnas */
+.modal-image-col::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 10%;
+  bottom: 10%;
+  width: 1px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(0, 204, 255, 0.3) 30%,
+    rgba(255, 34, 68, 0.3) 70%,
+    transparent
+  );
+  z-index: 2;
+}
+
+/* El número de nivel gigante — más visible */
+.modal-lv-big {
+  font-size: 8rem;
+  -webkit-text-stroke: 1px rgba(0, 204, 255, 0.18);
+  bottom: -5px;
+  left: -5px;
+}
+
+/* Columna de información — más air y estructura */
+.modal-info-col {
+  padding: 1.75rem 1.75rem 1.75rem 1.5rem;
+  gap: 0.9rem;
+  background: linear-gradient(
+    to left,
+    transparent 80%,
+    rgba(0, 0, 0, 0.2) 100%
+  );
+}
+
+/* Botón de cierre más definido */
+.modal-close {
+  font-family: var(--font-menu);
+  font-weight: 700;
+  font-style: italic;
+  font-variation-settings: "wdth" 85;
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  border-radius: 0;
+  clip-path: polygon(4px 0%, 100% 0%, calc(100% - 4px) 100%, 0% 100%);
+  transition: all var(--transition-fast);
+}
+
+/* Label de nivel */
+.modal-lv-label {
+  font-family: var(--font-menu);
+  font-weight: 700;
+  font-style: italic;
+  font-size: 0.8rem;
+  letter-spacing: 0.2em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 2rem;
+}
+
+/* Punto de color antes del nivel */
+.modal-lv-label::before {
+  content: '◆';
+  color: var(--red-accent);
+  font-size: 0.6rem;
+}
+
+/* Título con ángulo sutil — coherente con el resto de P3R */
+.modal-title {
+  font-family: var(--font-menu);
+  font-weight: 900;
+  font-style: italic;
+  font-variation-settings: "wdth" 85;
+  font-size: 1.8rem;
+  letter-spacing: 0.04em;
+  line-height: 1.1;
+  /* El degradado rojo-blanco pero más sutil en el modal */
+  background: linear-gradient(
+    100deg,
+    var(--red-accent) 0%,
+    var(--red-accent) 20%,
+    var(--white) 20%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Descripción con mejor legibilidad */
+.modal-desc {
+  font-size: 0.88rem;
+  line-height: 1.75;
+  color: rgba(255,255,255,0.75);
+  border-left: 2px solid rgba(0, 204, 255, 0.2);
+  padding-left: 0.8rem;
+}
+
+/* Tabla de stats — exactamente como la de Yukari en P3R */
+.modal-stats {
+  border: 1px solid rgba(0, 204, 255, 0.1);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.modal-stat-row {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  padding: 0;
+}
+
+.modal-stat-row:last-child {
+  border-bottom: none;
+}
+
+.modal-stat-name {
+  font-family: var(--font-menu);
+  font-weight: 700;
+  font-style: italic;
+  font-variation-settings: "wdth" 85;
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  color: var(--cyan-dim);
+  padding: 7px 10px;
+  background: rgba(0, 204, 255, 0.04);
+  border-right: 1px solid rgba(0, 204, 255, 0.1);
+  display: flex;
+  align-items: center;
+}
+
+.modal-stat-val {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: var(--white);
+  padding: 7px 12px;
+  display: flex;
+  align-items: center;
+}
+
+/* Badge de estado — color según el valor */
+#modalStatus {
+  font-family: var(--font-title);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  padding: 2px 10px;
+  border-radius: 2px;
+  clip-path: polygon(4px 0%, 100% 0%, calc(100% - 4px) 100%, 0% 100%);
+}
+
+/* JS agrega esta clase según el estado del proyecto */
+.status-done {
+  background: rgba(34, 204, 136, 0.15);
+  color: #22cc88;
+  border: 1px solid rgba(34, 204, 136, 0.3);
+}
+
+.status-wip {
+  background: rgba(255, 204, 34, 0.12);
+  color: #ffcc22;
+  border: 1px solid rgba(255, 204, 34, 0.3);
+}
+
+/* Tags en el modal más grandes */
+.modal-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.modal-tags .tag {
+  font-size: 0.75rem;
+  padding: 4px 12px;
+}
+
+/* Enlace a GitHub más prominente */
+.modal-link {
+  font-family: var(--font-menu);
+  font-weight: 700;
+  font-style: italic;
+  font-variation-settings: "wdth" 85;
+  font-size: 0.8rem;
+  letter-spacing: 0.15em;
+  padding: 10px 24px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.modal-link::after {
+  content: '→';
+  transition: transform var(--transition-fast);
+}
+
+.modal-link:hover::after {
+  transform: translateX(4px);
+}
+
+/* Animación de entrada del panel más dramática */
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.98);
+    filter: brightness(1.3);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: brightness(1);
+  }
+}
+
+.project-modal.open .modal-panel {
+  animation: modalSlideIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
