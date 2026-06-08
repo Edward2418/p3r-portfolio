@@ -996,27 +996,152 @@
 
       <!-- ---- SECCIÓN: SYSTEM / RESUME ---- -->
       <section class="section" id="resume">
+
+        <div class="system-lv-bg" aria-hidden="true">SYS</div>
+
         <div class="section-header">
           <h1 class="section-title">SYSTEM</h1>
           <div class="section-line"></div>
         </div>
-        <div class="system-content">
-          <div class="system-option">
-            <span class="system-icon">⬇</span>
-            <div class="system-info">
-              <h3 class="system-title">Descargar CV</h3>
-              <p class="system-desc">Currículum en formato PDF</p>
+
+        <!-- Layout: dos columnas
+             Izquierda: ficha del jugador (stats del portafolio)
+             Derecha:   acciones (descargar CV, contacto, redes) -->
+        <div class="system-p3r-layout">
+
+          <!-- COLUMNA IZQUIERDA: ficha del jugador -->
+          <div class="system-player-card">
+
+            <!-- Avatar + nivel -->
+            <div class="sys-avatar-wrap">
+              <div class="sys-avatar">ED</div>
+              <div class="sys-plv-tag">
+                <span class="sys-plv-lbl">PLV</span>
+                <span class="sys-plv-num">06</span>
+              </div>
             </div>
-            <a class="system-btn" href="assets/cv-edward.pdf" download>DOWNLOAD</a>
-          </div>
-          <div class="system-option">
-            <span class="system-icon">✉</span>
-            <div class="system-info">
-              <h3 class="system-title">Contacto directo</h3>
-              <p class="system-desc">d23390169@huauchinango.tecnm.mx</p>
+
+            <!-- Nombre y datos -->
+            <div class="sys-player-info">
+              <h2 class="sys-player-name">EDWARD NEGRETE BUSTOS</h2>
+              <p class="sys-player-role">Ing. en Sistemas Computacionales</p>
+              <p class="sys-player-inst">TecNM · ITSH · Huauchinango, Pue.</p>
             </div>
-            <a class="system-btn" href="mailto:edward@email.com">SEND</a>
+
+            <div class="sys-divider"></div>
+
+            <!-- Stats del portafolio — como los stats de un personaje -->
+            <div class="sys-stats-list">
+              <div class="sys-stat-row">
+                <span class="sys-stat-label">SEMESTRE</span>
+                <span class="sys-stat-val">6to de 8</span>
+              </div>
+              <div class="sys-stat-row">
+                <span class="sys-stat-label">ESPECIALIDAD</span>
+                <span class="sys-stat-val">Full-Stack · Videojuegos</span>
+              </div>
+              <div class="sys-stat-row">
+                <span class="sys-stat-label">PROYECTOS</span>
+                <span class="sys-stat-val">4 completados</span>
+              </div>
+              <div class="sys-stat-row">
+                <span class="sys-stat-label">TECNOLOGÍAS</span>
+                <span class="sys-stat-val">Java · SQL · HTML/CSS/JS · Kotlin</span>
+              </div>
+              <div class="sys-stat-row">
+                <span class="sys-stat-label">ESTADO</span>
+                <span class="sys-stat-val sys-stat-active">◆ Disponible</span>
+              </div>
+            </div>
+
+            <!-- Barra de progreso de carrera -->
+            <div class="sys-progress-block">
+              <div class="sys-progress-label">
+                <span>PROGRESO DE CARRERA</span>
+                <span>75%</span>
+              </div>
+              <div class="sys-progress-track">
+                <div class="sys-progress-fill"></div>
+              </div>
+              <div class="sys-progress-hint">Meta: Titulación 2027</div>
+            </div>
+
           </div>
+
+          <!-- COLUMNA DERECHA: acciones -->
+          <div class="system-actions-col">
+
+            <!-- Título de las acciones -->
+            <div class="sys-actions-header">ACCIONES DISPONIBLES</div>
+
+            <!-- Opción 1: CV -->
+            <div class="sys-action-card primary">
+              <div class="sys-action-icon">▼</div>
+              <div class="sys-action-info">
+                <h3 class="sys-action-title">Descargar Currículum</h3>
+                <p class="sys-action-desc">CV completo en formato PDF · Actualizado 2025</p>
+              </div>
+              <a class="sys-action-btn primary-btn"
+                 href="assets/cv-edward.pdf"
+                 download
+                 aria-label="Descargar CV">
+                DOWNLOAD
+              </a>
+            </div>
+
+            <!-- Opción 2: Email -->
+            <div class="sys-action-card">
+              <div class="sys-action-icon">✉</div>
+              <div class="sys-action-info">
+                <h3 class="sys-action-title">Correo institucional</h3>
+                <p class="sys-action-desc">d23390169@huauchinango.tecnm.mx</p>
+              </div>
+              <a class="sys-action-btn"
+                 href="mailto:d23390169@huauchinango.tecnm.mx"
+                 aria-label="Enviar correo">
+                SEND
+              </a>
+            </div>
+
+            <!-- Opción 3: GitHub -->
+            <div class="sys-action-card">
+              <div class="sys-action-icon">GH</div>
+              <div class="sys-action-info">
+                <h3 class="sys-action-title">GitHub</h3>
+                <p class="sys-action-desc">github.com/Edward2418</p>
+              </div>
+              <a class="sys-action-btn"
+                 href="https://github.com/Edward2418"
+                 target="_blank"
+                 aria-label="Ver GitHub">
+                VISIT
+              </a>
+            </div>
+
+            <!-- Opción 4: LinkedIn -->
+            <div class="sys-action-card">
+              <div class="sys-action-icon">LI</div>
+              <div class="sys-action-info">
+                <h3 class="sys-action-title">LinkedIn</h3>
+                <p class="sys-action-desc">Perfil profesional</p>
+              </div>
+              <a class="sys-action-btn"
+                 href="https://linkedin.com/"
+                 target="_blank"
+                 aria-label="Ver LinkedIn">
+                VISIT
+              </a>
+            </div>
+
+            <!-- Hint de controles estilo P3R -->
+            <div class="sys-controls-hint">
+              <span><kbd>↑↓</kbd> Navegar</span>
+              <span><kbd>↵</kbd> Seleccionar</span>
+              <span><kbd>B</kbd> Volver</span>
+            </div>
+
+          </div>
+
         </div>
       </section>
 

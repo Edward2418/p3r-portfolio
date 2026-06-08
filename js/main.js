@@ -1969,3 +1969,35 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
 }); /* fin Timeline */
+
+/* ================================================
+   FASE VISUAL 11 — Animación barra de progreso SYSTEM
+   ================================================ */
+document.addEventListener('DOMContentLoaded', () => {
+
+  const resumeSection = document.getElementById('resume');
+  if (!resumeSection) return;
+
+  const sysProgress = resumeSection.querySelector('.sys-progress-fill');
+
+  const sysObserver = new MutationObserver(() => {
+    if (resumeSection.classList.contains('active')) {
+      /* 6 de 8 semestres = 75% */
+      setTimeout(() => {
+        if (sysProgress) sysProgress.style.width = '75%';
+      }, 300);
+    } else {
+      if (sysProgress) sysProgress.style.width = '0';
+    }
+  });
+
+  sysObserver.observe(resumeSection, { attributes: true });
+
+  /* Efecto hover en las action cards — sonido de cursor */
+  resumeSection.querySelectorAll('.sys-action-card').forEach(card => {
+    card.addEventListener('mouseenter', () => {
+      if (typeof playSound === 'function') playSound('cursor');
+    });
+  });
+
+}); /* fin SYSTEM */
