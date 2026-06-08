@@ -4062,3 +4062,367 @@ body::after {
 .project-modal.open .modal-panel {
   animation: modalSlideIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
+
+/* ================================================
+   FASE VISUAL 10 — Fix modal + Timeline rediseño
+   ================================================ */
+
+/* FIX: Número de nivel del modal más visible
+   El problema era color:transparent + stroke muy tenue.
+   Solución: color real con baja opacidad, stroke más grueso. */
+.modal-lv-big {
+  color: rgba(0, 204, 255, 0.08) !important;
+  -webkit-text-stroke: 2px rgba(0, 204, 255, 0.25) !important;
+  font-size: 9rem !important;
+  bottom: 0 !important;
+  left: -15px !important;
+  /* El número también cambia de color según el proyecto —
+     JS lo actualiza vía style.color al abrir el modal */
+  transition: color 0.4s ease, -webkit-text-stroke 0.4s ease;
+}
+
+.project-modal.open .modal-lv-big {
+  animation: fadeInUp 0.5s 0.15s both;
+}
+
+/* ================================================
+   TIMELINE — Rediseño estilo P3R
+   Referencia: calendario del juego + pantalla de stats
+   Dos columnas: eventos a la izquierda como en un
+   calendario de fechas, detalle a la derecha al seleccionar.
+   ================================================ */
+
+/* Número decorativo al fondo */
+.timeline-lv-bg {
+  position: absolute;
+  top: 50%;
+  right: 1rem;
+  transform: translateY(-50%);
+  font-family: var(--font-title);
+  font-size: clamp(6rem, 18vw, 14rem);
+  line-height: 1;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(0, 204, 255, 0.06);
+  user-select: none;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Layout principal */
+.timeline-p3r-layout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 0;
+  height: calc(100vh - 180px);
+  border: 1px solid rgba(0, 204, 255, 0.12);
+  border-radius: 3px;
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+}
+
+/* ---- COLUMNA IZQUIERDA: lista de eventos ---- */
+.timeline-events-col {
+  background: rgba(0, 0, 0, 0.3);
+  border-right: 1px solid rgba(0, 204, 255, 0.12);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  position: relative;
+}
+
+/* Línea vertical que conecta los puntos */
+.timeline-events-col::before {
+  content: '';
+  position: absolute;
+  left: 52px;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(0, 204, 255, 0.2) 10%,
+    rgba(0, 204, 255, 0.2) 90%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+/* Cada evento en la línea de tiempo */
+.tl-event {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0.9rem 1rem;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  cursor: none;
+  transition: background var(--transition-fast);
+  position: relative;
+}
+
+.tl-event:hover {
+  background: rgba(0, 204, 255, 0.05);
+}
+
+.tl-event.active {
+  background: rgba(0, 204, 255, 0.08);
+}
+
+/* Borde izquierdo del evento activo */
+.tl-event.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--cyan);
+}
+
+/* El marcador: año + punto */
+.tl-event-marker {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+  width: 44px;
+}
+
+.tl-event-year {
+  font-family: var(--font-title);
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  color: var(--cyan-dim);
+  line-height: 1;
+}
+
+.tl-event.current .tl-event-year {
+  color: var(--red-accent);
+}
+
+.tl-event.future .tl-event-year {
+  color: rgba(255,255,255,0.3);
+}
+
+/* El punto en la línea */
+.tl-event-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--bg-dark);
+  border: 2px solid var(--cyan-dim);
+  flex-shrink: 0;
+  transition: all var(--transition-fast);
+}
+
+.tl-event.active .tl-event-dot,
+.tl-event:hover .tl-event-dot {
+  background: var(--cyan);
+  border-color: var(--cyan);
+  box-shadow: 0 0 10px var(--cyan);
+}
+
+.tl-event.current .tl-event-dot {
+  background: var(--red-accent);
+  border-color: var(--red-accent);
+  box-shadow: 0 0 10px var(--red-accent);
+  animation: pulseDot 2s ease-in-out infinite;
+}
+
+.tl-event.future .tl-event-dot {
+  border-color: rgba(255,255,255,0.2);
+  border-style: dashed;
+}
+
+/* Etiqueta del evento */
+.tl-event-label {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.tl-event-title {
+  font-family: var(--font-title);
+  font-size: 0.88rem;
+  letter-spacing: 0.03em;
+  color: var(--white);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}
+
+.tl-event.active .tl-event-title {
+  color: var(--cyan);
+}
+
+.tl-event.future .tl-event-title {
+  color: rgba(255,255,255,0.4);
+}
+
+.tl-event-sub {
+  font-size: 0.65rem;
+  color: var(--white-dim);
+  letter-spacing: 0.05em;
+  display: block;
+}
+
+/* ---- COLUMNA DERECHA: detalle del evento ---- */
+.timeline-detail-col {
+  padding: 2rem;
+  overflow-y: auto;
+  position: relative;
+}
+
+/* Cada panel de detalle */
+.tl-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  animation: fadeInUp 0.3s ease both;
+}
+
+.tl-detail.hidden {
+  display: none;
+}
+
+/* Año grande al fondo del detalle — como el "34" de P3R */
+.tl-detail-year-big {
+  position: absolute;
+  top: 50%;
+  right: 1.5rem;
+  transform: translateY(-50%);
+  font-family: var(--font-title);
+  font-size: clamp(5rem, 12vw, 9rem);
+  line-height: 1;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(0, 204, 255, 0.08);
+  user-select: none;
+  pointer-events: none;
+  letter-spacing: -0.02em;
+}
+
+/* Contenido del detalle */
+.tl-detail-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  position: relative;
+  z-index: 1;
+}
+
+/* Badge de categoría */
+.tl-detail-badge {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-title);
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  padding: 3px 12px;
+  border: 1px solid var(--cyan-dim);
+  color: var(--cyan-dim);
+  background: rgba(0, 204, 255, 0.06);
+  clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
+  align-self: flex-start;
+}
+
+.active-badge {
+  border-color: var(--red-accent) !important;
+  color: var(--red-accent) !important;
+  background: rgba(255, 34, 68, 0.08) !important;
+  animation: menuGlowPulse 2.5s ease-in-out infinite;
+  /* Reusar el glow del menú pero en rojo */
+  animation: pulseDot 2.5s ease-in-out infinite;
+}
+
+.future-badge {
+  border-color: rgba(255,255,255,0.2) !important;
+  color: rgba(255,255,255,0.4) !important;
+  background: transparent !important;
+  border-style: dashed !important;
+}
+
+.tl-detail-title {
+  font-family: var(--font-title);
+  font-size: 1.8rem;
+  letter-spacing: 0.05em;
+  line-height: 1.1;
+  background: linear-gradient(
+    100deg,
+    var(--red-accent) 0%,
+    var(--red-accent) 20%,
+    var(--white) 20%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.tl-detail-institution {
+  font-size: 0.8rem;
+  color: var(--cyan-dim);
+  letter-spacing: 0.06em;
+  font-weight: 500;
+}
+
+.tl-detail-divider {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    var(--red-accent) 0%,
+    var(--cyan) 40%,
+    transparent 100%
+  );
+}
+
+.tl-detail-desc {
+  font-size: 0.88rem;
+  color: var(--white-dim);
+  line-height: 1.8;
+  max-width: 520px;
+}
+
+.tl-detail-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .timeline-p3r-layout {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+    height: auto;
+  }
+  .timeline-events-col {
+    border-right: none;
+    border-bottom: 1px solid rgba(0, 204, 255, 0.12);
+    flex-direction: row;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+  .timeline-events-col::before { display: none; }
+  .tl-event {
+    flex-direction: column;
+    min-width: 100px;
+    padding: 0.75rem;
+    border-bottom: none;
+    border-right: 1px solid rgba(255,255,255,0.04);
+    align-items: center;
+    text-align: center;
+    gap: 6px;
+  }
+  .tl-event.active::before {
+    top: auto; bottom: 0; left: 0; right: 0;
+    width: 100%; height: 3px;
+  }
+  .tl-event-sub { display: none; }
+  .timeline-detail-col { padding: 1rem; }
+  .tl-detail-title { font-size: 1.2rem; }
+  .tl-detail-year-big { display: none; }
+  .timeline-lv-bg { display: none; }
+}

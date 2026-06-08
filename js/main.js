@@ -431,6 +431,18 @@ document.addEventListener('DOMContentLoaded', () => {
       modalStatus.classList.add('status-wip');
     }
 
+    /* El número de nivel toma el color del proyecto
+       para coherencia visual con la card que lo abrió */
+    const projectColor = {
+      '1': '#ff6600', '2': '#3b5bdb',
+      '3': '#7c3aed', '4': '#059669'
+    }[project.id] || '#00ccff';
+
+    if (modalLvBig) {
+      modalLvBig.style.color = `color-mix(in srgb, ${projectColor} 15%, transparent)`;
+      modalLvBig.style.webkitTextStroke = `2px color-mix(in srgb, ${projectColor} 40%, transparent)`;
+    }
+
     /* Actualizamos el color de la imagen del modal */
     modalImage.style.background = `
       repeating-linear-gradient(
@@ -1899,3 +1911,61 @@ document.addEventListener('DOMContentLoaded', () => {
   skillsObserver.observe(skillsSection, { attributes: true });
 
 }); /* fin Skills V7 */
+
+/* ================================================
+   FASE VISUAL 10 — Timeline interactivo
+   Mismo patrón que el Social Link:
+   clic en evento izquierdo → muestra detalle derecho
+   ================================================ */
+document.addEventListener('DOMContentLoaded', () => {
+
+  const tlEvents  = document.querySelectorAll('.tl-event');
+  const tlDetails = document.querySelectorAll('.tl-detail');
+
+  if (!tlEvents.length) return;
+
+  function selectTlEvent(id) {
+    /* Desactivar todos los eventos */
+    tlEvents.forEach(ev => ev.classList.remove('active'));
+    /* Ocultar todos los detalles */
+    tlDetails.forEach(det => det.classList.add('hidden'));
+
+    /* Activar el evento clickeado */
+    const activeEvent = document.querySelector(`.tl-event[data-tl="${id}"]`);
+    if (activeEvent) activeEvent.classList.add('active');
+
+    /* Mostrar el detalle correspondiente */
+    const activeDetail = document.getElementById(`tl-detail-${id}`);
+    if (activeDetail) {
+      activeDetail.classList.remove('hidden');
+      /* Re-dispara la animación fadeInUp */
+      activeDetail.style.animation = 'none';
+      void activeDetail.offsetWidth;
+      activeDetail.style.animation = '';
+    }
+
+    /* Reproducir sonido de cursor */
+    if (typeof playSound === 'function') playSound('cursor');
+  }
+
+  /* Asignar clic a cada evento */
+  tlEvents.forEach(ev => {
+    ev.addEventListener('click', () => {
+      selectTlEvent(ev.dataset.tl);
+    });
+  });
+
+  /* Seleccionar el evento actual (HOY) al entrar a la sección */
+  const tlSection = document.getElementById('timeline');
+  if (tlSection) {
+    const tlObserver = new MutationObserver(() => {
+      if (tlSection.classList.contains('active')) {
+        /* Seleccionar el evento "actual" (data-tl="4") por defecto */
+        setTimeout(() => selectTlEvent('4'), 300);
+        tlObserver.disconnect();
+      }
+    });
+    tlObserver.observe(tlSection, { attributes: true });
+  }
+
+}); /* fin Timeline */

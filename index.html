@@ -827,34 +827,169 @@
 
       <!-- ---- SECCIÓN: TIMELINE ---- -->
       <section class="section" id="timeline">
+
+        <!-- Número decorativo al fondo -->
+        <div class="timeline-lv-bg" aria-hidden="true">TL</div>
+
         <div class="section-header">
           <h1 class="section-title">TIMELINE</h1>
           <div class="section-line"></div>
         </div>
-        <div class="timeline-list">
-          <div class="timeline-item">
-            <div class="timeline-dot"></div>
-            <div class="timeline-content">
-              <span class="timeline-date">2023</span>
-              <h3 class="timeline-title">Inicio de carrera | ISC</h3>
-              <p class="timeline-desc">TecNM | Instituto Tecnológico Superior de Huauchinango</p>
+
+        <!-- Layout P3R: dos columnas
+             Izquierda: línea de tiempo vertical con los eventos
+             Derecha:   detalle expandido del evento seleccionado
+             JS activa el detalle al hacer clic en un evento -->
+        <div class="timeline-p3r-layout">
+
+          <!-- COLUMNA IZQUIERDA: eventos en la línea de tiempo -->
+          <div class="timeline-events-col">
+
+            <div class="tl-event" data-tl="1">
+              <div class="tl-event-marker">
+                <div class="tl-event-year">2023</div>
+                <div class="tl-event-dot"></div>
+              </div>
+              <div class="tl-event-label">
+                <span class="tl-event-title">Inicio de carrera</span>
+                <span class="tl-event-sub">ISC · ITSH</span>
+              </div>
             </div>
+
+            <div class="tl-event" data-tl="2">
+              <div class="tl-event-marker">
+                <div class="tl-event-year">2024</div>
+                <div class="tl-event-dot"></div>
+              </div>
+              <div class="tl-event-label">
+                <span class="tl-event-title">3er — 4to Semestre</span>
+                <span class="tl-event-sub">Materias de especialidad</span>
+              </div>
+            </div>
+
+            <div class="tl-event" data-tl="3">
+              <div class="tl-event-marker">
+                <div class="tl-event-year">2025</div>
+                <div class="tl-event-dot"></div>
+              </div>
+              <div class="tl-event-label">
+                <span class="tl-event-title">5to — 6to Semestre</span>
+                <span class="tl-event-sub">Proyectos avanzados</span>
+              </div>
+            </div>
+
+            <div class="tl-event current" data-tl="4">
+              <div class="tl-event-marker">
+                <div class="tl-event-year">HOY</div>
+                <div class="tl-event-dot"></div>
+              </div>
+              <div class="tl-event-label">
+                <span class="tl-event-title">6to Semestre · Activo</span>
+                <span class="tl-event-sub">Full-Stack y Videojuegos</span>
+              </div>
+            </div>
+
+            <div class="tl-event future" data-tl="5">
+              <div class="tl-event-marker">
+                <div class="tl-event-year">2027</div>
+                <div class="tl-event-dot"></div>
+              </div>
+              <div class="tl-event-label">
+                <span class="tl-event-title">Titulación</span>
+                <span class="tl-event-sub">Meta final</span>
+              </div>
+            </div>
+
           </div>
-          <div class="timeline-item">
-            <div class="timeline-dot"></div>
-            <div class="timeline-content">
-              <span class="timeline-date">2024</span>
-              <h3 class="timeline-title">Materias cursadas</h3>
-              <p class="timeline-desc">Programación Orientada a Objetos, Fundamentos de Bases de Datos, Desarrollo de Aplicaciones Móviles , Ingeniería de Software</p>
+
+          <!-- COLUMNA DERECHA: detalle del evento seleccionado -->
+          <div class="timeline-detail-col" id="tlDetailCol">
+
+            <!-- Detalle por evento — JS muestra el activo -->
+            <div class="tl-detail" id="tl-detail-1">
+              <div class="tl-detail-year-big">2023</div>
+              <div class="tl-detail-content">
+                <div class="tl-detail-badge">INICIO</div>
+                <h3 class="tl-detail-title">Ingeniería en Sistemas Computacionales</h3>
+                <p class="tl-detail-institution">TecNM · Instituto Tecnológico Superior de Huauchinango</p>
+                <div class="tl-detail-divider"></div>
+                <p class="tl-detail-desc">Comienzo de la carrera de ISC con enfoque en desarrollo de software. Primeras materias de programación, matemáticas y fundamentos de sistemas.</p>
+                <div class="tl-detail-tags">
+                  <span class="tag small">Algoritmos</span>
+                  <span class="tag small">Matemáticas</span>
+                  <span class="tag small">Fundamentos</span>
+                </div>
+              </div>
             </div>
-          </div>
-          <div class="timeline-item current">
-            <div class="timeline-dot"></div>
-            <div class="timeline-content">
-              <span class="timeline-date">2025 | Presente</span>
-              <h3 class="timeline-title">6º Semestre</h3>
-              <p class="timeline-desc">Proyectos activos en desarrollo</p>
+
+            <div class="tl-detail hidden" id="tl-detail-2">
+              <div class="tl-detail-year-big">2024</div>
+              <div class="tl-detail-content">
+                <div class="tl-detail-badge">FORMACIÓN</div>
+                <h3 class="tl-detail-title">Materias de Especialidad</h3>
+                <p class="tl-detail-institution">3er y 4to Semestre · ITSH</p>
+                <div class="tl-detail-divider"></div>
+                <p class="tl-detail-desc">Materias avanzadas de desarrollo: Programación Orientada a Objetos, Fundamentos de Bases de Datos, Desarrollo de Aplicaciones Móviles e Ingeniería de Software.</p>
+                <div class="tl-detail-tags">
+                  <span class="tag small">Java</span>
+                  <span class="tag small">POO</span>
+                  <span class="tag small">SQL</span>
+                  <span class="tag small">Kotlin</span>
+                </div>
+              </div>
             </div>
+
+            <div class="tl-detail hidden" id="tl-detail-3">
+              <div class="tl-detail-year-big">2025</div>
+              <div class="tl-detail-content">
+                <div class="tl-detail-badge">AVANZADO</div>
+                <h3 class="tl-detail-title">Proyectos y Especialización</h3>
+                <p class="tl-detail-institution">5to y 6to Semestre · ITSH</p>
+                <div class="tl-detail-divider"></div>
+                <p class="tl-detail-desc">Taller de SO, Redes, Lenguajes y Autómatas, UX/UI, Administración de BD. Primeros proyectos reales: analizadores sintácticos, sistemas de gestión, portafolio web.</p>
+                <div class="tl-detail-tags">
+                  <span class="tag small">Linux</span>
+                  <span class="tag small">Redes</span>
+                  <span class="tag small">UX/UI</span>
+                  <span class="tag small">JFlex</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="tl-detail hidden" id="tl-detail-4">
+              <div class="tl-detail-year-big">HOY</div>
+              <div class="tl-detail-content">
+                <div class="tl-detail-badge active-badge">ACTIVO</div>
+                <h3 class="tl-detail-title">6to Semestre — Full-Stack y Videojuegos</h3>
+                <p class="tl-detail-institution">ITSH · Huauchinango, Puebla</p>
+                <div class="tl-detail-divider"></div>
+                <p class="tl-detail-desc">Especialidad en desarrollo Full-Stack y Videojuegos. Construyendo proyectos reales mientras aprendo las tecnologías que mueven la industria: HTML/CSS/JS, Java, SQL, Kotlin y Git.</p>
+                <div class="tl-detail-tags">
+                  <span class="tag small">HTML/CSS/JS</span>
+                  <span class="tag small">Java</span>
+                  <span class="tag small">SQL</span>
+                  <span class="tag small">Git</span>
+                  <span class="tag small">Kotlin</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="tl-detail hidden" id="tl-detail-5">
+              <div class="tl-detail-year-big">2027</div>
+              <div class="tl-detail-content">
+                <div class="tl-detail-badge future-badge">META</div>
+                <h3 class="tl-detail-title">Titulación — ISC</h3>
+                <p class="tl-detail-institution">TecNM · ITSH</p>
+                <div class="tl-detail-divider"></div>
+                <p class="tl-detail-desc">Objetivo: titularse como Ingeniero en Sistemas Computacionales con experiencia real en desarrollo Full-Stack, bases de datos y videojuegos. Listo para el mercado laboral.</p>
+                <div class="tl-detail-tags">
+                  <span class="tag small">Next.js</span>
+                  <span class="tag small">React</span>
+                  <span class="tag small">Full-Stack</span>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
       </section>
